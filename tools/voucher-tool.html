@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voucher Tool — Zain Tools Hub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <div class="nav-links">
+        <a href="../index.html"              class="nav-btn">🏠 Home</a>
+        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+    </div>
+</nav>
+
+<!-- ===== VOUCHER TOOL PAGE ===== -->
+<div class="tool-page-wrap">
+
+    <!-- Upload Zone -->
+    <div id="voucher-upload" class="upload-drop-area">
+        <div class="upload-box-styled" onclick="document.getElementById('fileInputVoucher').click()">
+            <div class="upload-icon">🎟️</div>
+            <h3>Upload Voucher Excel File</h3>
+            <p>Filter & extract semicolon-separated ASINs for vouchers.<br>Supports .xlsx, .xls, .csv</p>
+            <button class="btn-upload" onclick="event.stopPropagation();">Select File</button>
+            <input type="file" id="fileInputVoucher" accept=".csv,.xlsx,.xls" style="display:none">
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="voucher-loading" class="loading-msg" style="display:none;">
+        ⚡ Processing your file...
+    </div>
+
+    <!-- Tool Layout -->
+    <div id="voucher-tool" style="display:none; flex:1; overflow:hidden;">
+        <div class="tool-body">
+
+            <!-- Sidebar -->
+            <div class="tool-sidebar">
+                <h3>Accounts Filter</h3>
+                <div id="voucher-accounts"></div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="tool-content">
+
+                <!-- Top Bar: Copy Button + Stats -->
+                <div class="voucher-top">
+                    <button class="btn-copy-voucher" id="voucherCopyBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3z"/>
+                        </svg>
+                        <span>Copy ASINs for Voucher</span>
+                    </button>
+
+                    <div class="voucher-stats">
+                        <div class="voucher-stat">
+                            <div class="n" id="v-totalAcc">0</div>
+                            <div class="l">Total Accounts</div>
+                        </div>
+                        <div class="voucher-stat">
+                            <div class="n" id="v-filteredCount">0</div>
+                            <div class="l">Filtered ASINs</div>
+                        </div>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <button class="btn-secondary" onclick="resetVoucher()" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
+                        🔄 Upload New File
+                    </button>
+                </div>
+
+                <!-- ASIN Display Box -->
+                <div class="asin-display-box">
+                    <div class="asin-text-out" id="voucherAsinText"></div>
+                    <div id="voucherNoData" style="display:none; color:rgba(255,255,255,0.4); text-align:center; padding:4rem; font-size:1.1rem;">
+                        No ASINs found for the selected account.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+/* ================================================
+   VOUCHER TOOL — Tool Logic
+   ================================================ */
+let voucherAllData  = [];
+let voucherFiltered = [];
+
+// File input change
+document.getElementById('fileInputVoucher').addEventListener('change', e => {
+    if (e.target.files[0]) handleVoucherFile(e.target.files[0]);
+});
+
+// Drag & drop
+const dropVoucher = document.querySelector('#voucher-upload .upload-box-styled');
+dropVoucher.addEventListener('dragover',  e => { e.preventDefault(); dropVoucher.classList.add('drag-over'); });
+dropVoucher.addEventListener('dragleave', () => dropVoucher.classList.remove('drag-over'));
+dropVoucher.addEventListener('drop', e => {
+    e.preventDefault();
+    dropVoucher.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleVoucherFile(e.dataTransfer.files[0]);
+});
+
+function handleVoucherFile(file) {
+    document.getElementById('voucher-upload').style.display  = 'none';
+    document.getElementById('voucher-loading').style.display = 'flex';
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const wb   = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            processVoucher(data);
+        } catch (err) {
+            showToast('❌ Error parsing file. Please check format.', true);
+            console.error(err);
+            resetVoucher();
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function processVoucher(data) {
+    const rows = data.map(row => ({
+        asin:    String(row.ASIN || row.asin || '').trim(),
+        account: String(row['账号'] || row.Account || row.account || '').trim().toLowerCase()
+    })).filter(r => r.asin && ALLOWED_SET.has(r.account));
+
+    if (rows.length === 0) {
+        showToast('❌ No valid data found for allowed accounts!', true);
+        resetVoucher();
+        return;
+    }
+
+    voucherAllData = rows;
+    document.getElementById('voucher-loading').style.display = 'none';
+    document.getElementById('voucher-tool').style.display    = 'flex';
+
+    buildVoucherSidebar();
+    filterVoucher('all');
+}
+
+function buildVoucherSidebar() {
+    const uniqueAccs = [...new Set(voucherAllData.map(r => r.account))];
+    const groups     = getBrandGroups(uniqueAccs);
+    const container  = document.getElementById('voucher-accounts');
+    container.innerHTML = '';
+
+    const allBtn = makeVoucherBtn('all', `All Accounts (${voucherAllData.length})`);
+    allBtn.classList.add('active');
+    container.appendChild(allBtn);
+
+    Object.entries(groups).sort().forEach(([prefix, accs]) => {
+        const title = document.createElement('div');
+        title.className = 'sidebar-group-title';
+        title.textContent = prefix.toUpperCase() + ' Accounts';
+        container.appendChild(title);
+        accs.sort().forEach(acc => {
+            const count = voucherAllData.filter(r => r.account === acc).length;
+            container.appendChild(makeVoucherBtn(acc, `${acc.toUpperCase()} (${count})`));
+        });
+    });
+
+    document.getElementById('v-totalAcc').textContent = uniqueAccs.length;
+}
+
+function makeVoucherBtn(val, label) {
+    const btn = document.createElement('button');
+    btn.className   = 'sidebar-acc-btn';
+    btn.textContent = label;
+    btn.dataset.val = val;
+    btn.onclick = () => {
+        document.querySelectorAll('#voucher-accounts .sidebar-acc-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterVoucher(val);
+    };
+    return btn;
+}
+
+function filterVoucher(acc) {
+    voucherFiltered = acc === 'all'
+        ? voucherAllData
+        : voucherAllData.filter(r => r.account === acc);
+
+    const textEl = document.getElementById('voucherAsinText');
+    const noData = document.getElementById('voucherNoData');
+
+    if (voucherFiltered.length === 0) {
+        textEl.textContent    = '';
+        noData.style.display  = 'block';
+    } else {
+        noData.style.display  = 'none';
+        textEl.textContent    = voucherFiltered.map(r => r.asin).join(';');
+    }
+    document.getElementById('v-filteredCount').textContent = voucherFiltered.length;
+}
+
+// Copy Button
+document.getElementById('voucherCopyBtn').addEventListener('click', () => {
+    if (voucherFiltered.length === 0) {
+        showToast('⚠️ No ASINs available to copy', true);
+        return;
+    }
+    const text = voucherFiltered.map(r => r.asin).join(';');
+    navigator.clipboard.writeText(text).then(() => {
+        const btn  = document.getElementById('voucherCopyBtn');
+        const span = btn.querySelector('span');
+        const orig = span.textContent;
+        span.textContent = 'Copied! ✅';
+        btn.classList.add('copied');
+        showToast('✅ Semicolon-separated ASINs copied!');
+        setTimeout(() => { span.textContent = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => showToast('❌ Copy failed!', true));
+});
+
+function resetVoucher() {
+    document.getElementById('voucher-upload').style.display  = 'flex';
+    document.getElementById('voucher-loading').style.display = 'none';
+    document.getElementById('voucher-tool').style.display    = 'none';
+    document.getElementById('fileInputVoucher').value        = '';
+    voucherAllData  = [];
+    voucherFiltered = [];
+}
+</script>
+</body>
+</html>
