@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Changer — Zain Tools Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .word-page {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 62px);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <div class="nav-links">
+        <a href="../index.html"              class="nav-btn">🏠 Home</a>
+        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+    </div>
+</nav>
+
+<!-- ===== WORD CHANGER PAGE ===== -->
+<div class="word-page">
+
+    <div class="word-header">
+        <h2>✏️ Word Changer</h2>
+        <p>Type or paste a word to generate safe Amazon variations</p>
+    </div>
+
+    <div class="word-input-wrap">
+        <input
+            type="text"
+            id="wordInput"
+            placeholder="Type or paste a word here..."
+            autocomplete="off"
+        />
+    </div>
+
+    <!-- Warning Banner (shown for banned words) -->
+    <div id="warningBanner" class="warning-banner" style="display:none;">
+        ⚠️ This word is BANNED on Amazon. Variations cannot be generated.
+    </div>
+
+    <!-- Results -->
+    <div id="resultsContainer"></div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">✍️</div>
+        <h3>Ready to Generate</h3>
+        <p>Press Enter or paste a word to generate safe variations</p>
+    </div>
+
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+/* ================================================
+   WORD CHANGER — Tool Logic
+   ================================================ */
+
+const bannedWords = [
+    'anxiety','cancer','alzheimer','crabs','cure','treat','prevent','diagnose','therapy',
+    'cbd','thc','marijuana','cannabis','hemp oil','drug','drugs','narcotic',
+    'best','top','most','number one','#1','leading','ultimate',
+    'guarantee','guaranteed','certified','approved','tested','validated','proven',
+    'free shipping','best seller','bestseller','top rated','high quality','premium quality',
+    'unlike other brands','better than','buy with confidence','money back',
+    'satisfaction guaranteed','recommended by','doctor recommended','clinically proven',
+    'fda approved','fda','epa registered','organic','all natural','natural',
+    'non-toxic','kills bacteria','antibacterial','antiviral','antimicrobial',
+    'disinfectant','eliminates','removes','cures','heals','healing',
+    'aids','hiv','autism','autistic','adhd','add','ocd',
+    'covid','covid19','covid-19','coronavirus','pandemic','epidemic',
+    'pain free','pain relief','pain killer','painkiller','analgesic',
+    'anti aging','anti-aging','antiaging','wrinkle free','age defying',
+    'weight loss','lose weight','fat burner','fat loss','slimming',
+    'metabolism','metabolic','cholesterol','blood pressure','hypertension',
+    'diabetes','diabetic','blood sugar','glucose','insulin',
+    'infection','virus','bacteria','disease','illness','syndrome',
+    'medical','medicine','clinical','clinically','prescription','pharmaceutical',
+    'ketamine','kratom','ephedrine','codeine','morphine','opioid',
+    'steroid','hormone','testosterone','hgh','growth hormone',
+    'amazon','kindle','alexa','echo','fire tv','prime',
+    'iphone','ipad','apple','samsung','sony','lg','dell',
+    'adidas','nike','puma','reebok','under armour',
+    'nintendo','playstation','xbox','ps4','ps5',
+    'eco-friendly','environmentally friendly','green','sustainable','carbon neutral',
+    'cheapest','lowest price','best price','sale','discount','deal','offer',
+    'limited time','hurry','act now','today only','clearance','promotional',
+    'lifetime warranty','warranty','refund','return policy','exchange'
+];
+
+const safeCharMap = {
+    'a': ['á', 'à', 'â', 'ä', 'å'],
+    'e': ['é', 'è', 'ê', 'ë'],
+    'i': ['í', 'ì', 'î', 'ï'],
+    'o': ['ó', 'ò', 'ô', 'ö', 'õ'],
+    'u': ['ú', 'ù', 'û', 'ü'],
+    'c': ['ç'],
+    'n': ['ñ'],
+    's': ['š'],
+    'z': ['ž'],
+    'y': ['ý', 'ÿ']
+};
+
+// Auto-focus on load
+window.addEventListener('load', () => {
+    document.getElementById('wordInput').focus();
+});
+
+// Paste anywhere on the page → auto fills input
+document.addEventListener('paste', (e) => {
+    const activeTag = document.activeElement.tagName.toLowerCase();
+    if (activeTag === 'textarea' || activeTag === 'input') return;
+    const t = (e.clipboardData || window.clipboardData).getData('text');
+    const wi = document.getElementById('wordInput');
+    if (t && t.trim() && document.activeElement !== wi) {
+        e.preventDefault();
+        wi.value = t.trim();
+        wi.focus();
+        setTimeout(generateVariations, 50);
+    }
+});
+
+// Input listeners
+document.getElementById('wordInput').addEventListener('paste', () => {
+    setTimeout(() => { if (document.getElementById('wordInput').value.trim()) generateVariations(); }, 50);
+});
+document.getElementById('wordInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') generateVariations();
+});
+
+/* ---- Core Logic ---- */
+function generateVariations() {
+    const input = document.getElementById('wordInput').value.trim();
+    if (!input) return;
+
+    const rc = document.getElementById('resultsContainer');
+    const es = document.getElementById('emptyState');
+    const wb = document.getElementById('warningBanner');
+
+    if (checkIfBanned(input)) {
+        es.style.display = 'none';
+        rc.innerHTML = '';
+        wb.style.display = 'block';
+        rc.appendChild(createBannedCard(input));
+        return;
+    }
+
+    wb.style.display = 'none';
+    es.style.display = 'none';
+    rc.innerHTML = '';
+
+    const words = input.split(' ').filter(w => w);
+    const generated = new Set();
+    let attempts = 0;
+
+    while (generated.size < 5 && attempts < 300) {
+        attempts++;
+        const v = genSingleVar(words);
+        if (v && !checkIfBanned(v)) generated.add(v);
+    }
+
+    if (generated.size === 0) {
+        wb.style.display = 'block';
+        rc.appendChild(createBannedCard(input));
+        return;
+    }
+
+    generated.forEach(w => rc.appendChild(createVariationCard(w)));
+}
+
+function genSingleVar(words) {
+    return words.map(word => {
+        const lw = word.toLowerCase();
+        const chars = Array.from(lw);
+        const modifiable = chars.map((c, i) => ({ char: c, idx: i })).filter(c => safeCharMap[c.char]);
+        if (modifiable.length === 0) return capFirst(word);
+        const target = modifiable[Math.floor(Math.random() * modifiable.length)];
+        const reps = safeCharMap[target.char];
+        chars[target.idx] = reps[Math.floor(Math.random() * reps.length)];
+        return capFirst(chars.join(''));
+    }).join(' ');
+}
+
+function capFirst(w) { return w ? w.charAt(0).toUpperCase() + w.slice(1) : w; }
+
+function checkIfBanned(text) {
+    const lt = text.toLowerCase().trim();
+    return bannedWords.some(b =>
+        new RegExp('\\b' + b.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i').test(lt)
+    );
+}
+
+function createBannedCard(word) {
+    const d = document.createElement('div');
+    d.className = 'word-card banned-word';
+    d.innerHTML = `
+        <svg style="width:2.5rem;height:2.5rem;color:white;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
+        </svg>
+        <div style="flex:1">
+            <span class="main-word" style="display:block">${word}</span>
+            <span style="display:block;margin-top:0.3rem;color:white;font-weight:700;font-size:0.9rem;opacity:0.9">🚫 BANNED WORD — Cannot generate variations</span>
+        </div>`;
+    return d;
+}
+
+function createVariationCard(word) {
+    const d = document.createElement('div');
+    d.className = 'word-card safe-word';
+    d.title = 'Click to copy';
+    d.onclick = () => copyWord(word, d);
+    d.innerHTML = `
+        <svg style="width:2.2rem;height:2.2rem;color:white;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span class="main-word">${word}</span>
+        <span class="word-badge">✓ SAFE</span>`;
+    return d;
+}
+
+function copyWord(text, card) {
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('✓ Copied: ' + text);
+        const badge = card.querySelector('.word-badge');
+        const orig = badge.textContent;
+        badge.textContent = '✅ Copied!';
+        setTimeout(() => badge.textContent = orig, 1500);
+    }).catch(() => {
+        // Fallback for older browsers
+        const tmp = document.createElement('textarea');
+        tmp.value = text;
+        document.body.appendChild(tmp);
+        tmp.select();
+        try { document.execCommand('copy'); showToast('✓ Copied: ' + text); }
+        catch(e) { showToast('❌ Failed to copy', true); }
+        document.body.removeChild(tmp);
+    });
+}
+</script>
+</body>
+</html>
