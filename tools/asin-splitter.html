@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASIN 900 Splitter — Zain Tools Hub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <div class="nav-links">
+        <a href="../index.html"              class="nav-btn">🏠 Home</a>
+        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+    </div>
+</nav>
+
+<!-- ===== ASIN 900 PAGE ===== -->
+<div class="tool-page-wrap">
+
+    <!-- Upload Zone -->
+    <div id="asin900-upload" class="upload-drop-area">
+        <div class="upload-box-styled" onclick="document.getElementById('fileInput900').click()">
+            <div class="upload-icon">📦</div>
+            <h3>Upload ASIN Excel File</h3>
+            <p>Auto-split ASINs by account into chunks of 900.<br>Supports .xlsx, .xls, .csv</p>
+            <button class="btn-upload" onclick="event.stopPropagation();">Select File</button>
+            <input type="file" id="fileInput900" accept=".csv,.xlsx,.xls" style="display:none">
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="asin900-loading" class="loading-msg" style="display:none;">
+        ⚡ Processing your file...
+    </div>
+
+    <!-- Tool Layout (sidebar + content) -->
+    <div id="asin900-tool" style="display:none; flex:1; overflow:hidden;">
+        <div class="tool-body">
+            <!-- Sidebar -->
+            <div class="tool-sidebar">
+                <h3>Accounts Filter</h3>
+                <div id="asin900-accounts"></div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="tool-content">
+                <!-- Stats Strip -->
+                <div class="stats-strip">
+                    <div class="sc"><div class="n" id="a9-totalAcc">0</div><div class="l">Total Accounts</div></div>
+                    <div class="sc"><div class="n" id="a9-totalAsins">0</div><div class="l">Total ASINs</div></div>
+                    <div class="sc"><div class="n" id="a9-totalGroups">0</div><div class="l">Total Groups</div></div>
+                    <div class="sc"><div class="n" id="a9-showing">0</div><div class="l">Showing ASINs</div></div>
+                </div>
+
+                <!-- Reset Button -->
+                <div style="margin-bottom: 1.5rem;">
+                    <button class="btn-secondary" onclick="reset900()" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
+                        🔄 Upload New File
+                    </button>
+                </div>
+
+                <!-- Group Cards -->
+                <div id="asin900-content"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+/* ================================================
+   ASIN 900 SPLITTER — Tool Logic
+   ================================================ */
+let asin900Data   = {};
+let asin900Filter = 'all';
+
+// File input change
+document.getElementById('fileInput900').addEventListener('change', e => {
+    if (e.target.files[0]) handleAsin900File(e.target.files[0]);
+});
+
+// Drag & drop
+const drop900 = document.querySelector('#asin900-upload .upload-box-styled');
+drop900.addEventListener('dragover',  e => { e.preventDefault(); drop900.classList.add('drag-over'); });
+drop900.addEventListener('dragleave', () => drop900.classList.remove('drag-over'));
+drop900.addEventListener('drop', e => {
+    e.preventDefault();
+    drop900.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleAsin900File(e.dataTransfer.files[0]);
+});
+
+function handleAsin900File(file) {
+    document.getElementById('asin900-upload').style.display  = 'none';
+    document.getElementById('asin900-loading').style.display = 'flex';
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const wb   = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            processAsin900(data);
+        } catch (err) {
+            showToast('❌ Error parsing file. Please check format.', true);
+            console.error(err);
+            reset900();
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function processAsin900(data) {
+    const rows = data.map(row => ({
+        asin:    String(row.ASIN || row.asin || '').trim(),
+        account: String(row['账号'] || row.Account || row.account || '').trim().toLowerCase()
+    })).filter(r => r.asin && ALLOWED_SET.has(r.account));
+
+    if (rows.length === 0) {
+        showToast('❌ No valid data found for allowed accounts!', true);
+        reset900();
+        return;
+    }
+
+    asin900Data = {};
+    rows.forEach(r => {
+        if (!asin900Data[r.account]) asin900Data[r.account] = [];
+        asin900Data[r.account].push(r.asin);
+    });
+
+    // Split into groups of 900
+    Object.keys(asin900Data).forEach(acc => {
+        const asins  = asin900Data[acc];
+        const groups = [];
+        for (let i = 0; i < asins.length; i += 900) groups.push(asins.slice(i, i + 900));
+        asin900Data[acc] = groups;
+    });
+
+    document.getElementById('asin900-loading').style.display = 'none';
+    const toolEl = document.getElementById('asin900-tool');
+    toolEl.style.display = 'flex';
+
+    build900Sidebar();
+    show900Content('all');
+}
+
+function build900Sidebar() {
+    const groups     = getBrandGroups(Object.keys(asin900Data));
+    const container  = document.getElementById('asin900-accounts');
+    container.innerHTML = '';
+
+    const totalAsins = Object.values(asin900Data).flat().reduce((s, g) => s + g.length, 0);
+    const allBtn = makeSidebarBtn('all', `All Accounts (${totalAsins})`, () => show900Content('all'));
+    allBtn.classList.add('active');
+    container.appendChild(allBtn);
+
+    Object.entries(groups).sort().forEach(([prefix, accs]) => {
+        const title = document.createElement('div');
+        title.className = 'sidebar-group-title';
+        title.textContent = prefix.toUpperCase() + ' Accounts';
+        container.appendChild(title);
+        accs.sort().forEach(acc => {
+            const count = asin900Data[acc].reduce((s, g) => s + g.length, 0);
+            container.appendChild(makeSidebarBtn(acc, `${acc.toUpperCase()} (${count})`, () => show900Content(acc)));
+        });
+    });
+
+    const totalGroups = Object.values(asin900Data).reduce((s, gs) => s + gs.length, 0);
+    document.getElementById('a9-totalAcc').textContent    = Object.keys(asin900Data).length;
+    document.getElementById('a9-totalAsins').textContent  = totalAsins;
+    document.getElementById('a9-totalGroups').textContent = totalGroups;
+    document.getElementById('a9-showing').textContent     = totalAsins;
+}
+
+function makeSidebarBtn(val, label, onClick) {
+    const btn = document.createElement('button');
+    btn.className   = 'sidebar-acc-btn';
+    btn.textContent = label;
+    btn.dataset.val = val;
+    btn.onclick = () => {
+        document.querySelectorAll('#asin900-accounts .sidebar-acc-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        onClick();
+    };
+    return btn;
+}
+
+function show900Content(filter) {
+    asin900Filter = filter;
+    const container = document.getElementById('asin900-content');
+    container.innerHTML = '';
+    const accs = filter === 'all' ? Object.keys(asin900Data).sort() : [filter];
+    let totalShowing = 0;
+
+    accs.forEach(acc => {
+        const groups = asin900Data[acc];
+        const total  = groups.reduce((s, g) => s + g.length, 0);
+        totalShowing += total;
+
+        const section = document.createElement('div');
+        section.className = 'acc-section';
+
+        let cardsHTML = '';
+        groups.forEach((grp, idx) => {
+            const preview = grp.slice(0, 5).join('\n') + (grp.length > 5 ? '\n...' : '');
+            cardsHTML += `
+                <div class="group-card">
+                    <div class="group-card-header">
+                        <span class="group-card-title">Group ${idx + 1}</span>
+                        <span class="group-card-count">${grp.length} ASINs</span>
+                    </div>
+                    <div class="group-preview">${preview}</div>
+                    <button class="btn-copy-group" onclick="copy900Group(this,'${acc}',${idx})">Copy Group</button>
+                </div>`;
+        });
+
+        section.innerHTML = `
+            <div class="acc-section-header">
+                <span class="acc-section-name">${acc}</span>
+                <span class="acc-section-badge">${total} ASINs &bull; ${groups.length} Groups</span>
+            </div>
+            <div class="groups-grid">${cardsHTML}</div>`;
+        container.appendChild(section);
+    });
+
+    document.getElementById('a9-showing').textContent = totalShowing;
+}
+
+window.copy900Group = function (btn, acc, idx) {
+    const text = asin900Data[acc][idx].join('\n');
+    const orig = btn.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied! ✅';
+        btn.classList.add('copied');
+        showToast(`✅ Copied Group ${idx + 1} from ${acc.toUpperCase()}`);
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    }).catch(() => {
+        showToast('❌ Copy failed!', true);
+        btn.textContent = 'Failed!';
+        setTimeout(() => btn.textContent = orig, 2000);
+    });
+};
+
+function reset900() {
+    document.getElementById('asin900-upload').style.display  = 'flex';
+    document.getElementById('asin900-loading').style.display = 'none';
+    document.getElementById('asin900-tool').style.display    = 'none';
+    document.getElementById('fileInput900').value            = '';
+    asin900Data = {};
+}
+</script>
+</body>
+</html>
