@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Terms Optimizer — Zain Tools Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+    <a href="../index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="nav-links">
+        <a href="../index.html"              class="nav-btn">Home</a>
+        <a href="word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="search-optimizer.html"      class="nav-btn">Search Terms</a>
+    </div>
+</nav>
+
+<!-- ===== SEARCH TERMS OPTIMIZER PAGE ===== -->
+<div class="search-page">
+    <div class="search-wrap">
+
+        <h2>
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search Terms Optimizer
+        </h2>
+        <p class="search-sub">Clean, normalize, and deduplicate keywords to fit Amazon's 249-byte Search Terms limit. Paste raw keywords and get a clean, optimized output.</p>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="search" onclick="setMode('search', this)">Search Terms</button>
+            <button class="mode-btn" data-mode="asin" onclick="setMode('asin', this)">ASIN List</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="search-stats">
+            <div class="search-stat">
+                <div class="n" id="st-totalIn">0</div>
+                <div class="l">Total Words In</div>
+            </div>
+            <div class="search-stat">
+                <div class="n" id="st-dupsRemoved">0</div>
+                <div class="l">Duplicates Removed</div>
+            </div>
+            <div class="search-stat">
+                <div class="n" id="st-finalWords">0</div>
+                <div class="l">Final Words</div>
+            </div>
+            <div class="search-stat" id="st-byteStat">
+                <div class="n" id="st-finalBytes">0</div>
+                <div class="l">Final Bytes</div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <label class="section-label">Raw Keywords Input</label>
+        <textarea id="searchInput" class="search-textarea" placeholder="Paste your raw keywords here — duplicates, accented characters, messy formatting all welcome..." style="min-height:160px;"></textarea>
+
+        <!-- Byte Counter -->
+        <div id="byteCounter" class="byte-counter ok" style="margin-top:0.8rem;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span id="byteLabel">0 / 249 bytes</span>
+        </div>
+
+        <!-- Output -->
+        <label class="section-label" style="margin-top:1rem;">Optimized Output</label>
+        <textarea id="searchOutput" class="search-textarea" readonly style="min-height:120px; background:rgba(22,163,74,0.08); border-color:rgba(74,222,128,0.2);"></textarea>
+
+        <!-- Actions -->
+        <div class="variator-actions">
+            <button class="btn-primary" id="searchCopyBtn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                Copy Output
+            </button>
+            <button class="btn-secondary" id="searchClearBtn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                Clear
+            </button>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-box">
+            <h4>Amazon Search Terms Tips</h4>
+            <ul>
+                <li>Amazon measures Search Terms in <strong>bytes</strong>, not characters. Accented characters like &eacute; or &ntilde; use 2 bytes each.</li>
+                <li>No commas needed — Amazon ignores them. Use spaces to separate keywords.</li>
+                <li>Lowercase is preferred — Amazon is not case-sensitive for search, and lowercase uses fewer bytes.</li>
+                <li>Do not repeat words that already appear in your product title — Amazon indexes those automatically.</li>
+                <li>The 249-byte limit is strictly enforced. Exceeding it may cause Amazon to ignore all your search terms.</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+/* ================================================
+   SEARCH TERMS OPTIMIZER — Tool Logic
+   ================================================ */
+
+let currentMode = 'search';
+
+const searchInput  = document.getElementById('searchInput');
+const searchOutput = document.getElementById('searchOutput');
+
+/* ---- Mode Toggle ---- */
+function setMode(mode, btn) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    processSearch();
+}
+
+/* ---- Core Processing ---- */
+function processSearch() {
+    const rawText = searchInput.value;
+
+    if (!rawText.trim()) {
+        searchOutput.value = '';
+        updateSearchStats(0, 0, 0, 0);
+        updateByteCounter(0);
+        return;
+    }
+
+    // Step 1: NFKC normalize
+    let source = rawText.normalize('NFKC');
+
+    // Step 2: Replace newlines/tabs with spaces
+    source = source.replace(/[\r\n\t]+/g, ' ');
+
+    // Step 3: Extract tokens (keeps hyphenated words together)
+    const rawTokens = source.match(/[\p{L}\p{N}\p{M}]+(?:[-_\/&][\p{L}\p{N}\p{M}]+)*/gu) || [];
+
+    const totalIn = rawTokens.length;
+
+    // Step 4: Deduplicate
+    const seen = new Set();
+    const outputTokens = [];
+
+    for (const tok of rawTokens) {
+        const key = normalizeKey(tok);
+        if (!key) continue;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        if (currentMode === 'search') {
+            // Search Terms mode: output the normalized key (lowercase)
+            outputTokens.push(key);
+        } else {
+            // ASIN mode: keep original token
+            outputTokens.push(tok);
+        }
+    }
+
+    // Step 5: Join output
+    const separator = currentMode === 'search' ? ' ' : ';';
+    const outputStr = outputTokens.join(separator);
+
+    searchOutput.value = outputStr;
+
+    // Step 6: Calculate byte count
+    const byteCount = new TextEncoder().encode(outputStr).length;
+
+    const dupsRemoved = totalIn - outputTokens.length;
+    updateSearchStats(totalIn, dupsRemoved, outputTokens.length, byteCount);
+    updateByteCounter(byteCount);
+}
+
+/* ---- Update Stats ---- */
+function updateSearchStats(totalIn, dupsRemoved, finalWords, finalBytes) {
+    document.getElementById('st-totalIn').textContent      = totalIn;
+    document.getElementById('st-dupsRemoved').textContent  = dupsRemoved;
+    document.getElementById('st-finalWords').textContent    = finalWords;
+    document.getElementById('st-finalBytes').textContent    = finalBytes;
+
+    const byteStat = document.getElementById('st-byteStat');
+    if (finalBytes > 249) {
+        byteStat.classList.add('warn');
+    } else {
+        byteStat.classList.remove('warn');
+    }
+}
+
+/* ---- Update Byte Counter ---- */
+function updateByteCounter(bytes) {
+    const counter = document.getElementById('byteCounter');
+    const label   = document.getElementById('byteLabel');
+
+    label.textContent = `${bytes} / 249 bytes`;
+
+    if (bytes > 249) {
+        counter.className = 'byte-counter warn';
+        counter.querySelector('svg').innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+    } else {
+        counter.className = 'byte-counter ok';
+        counter.querySelector('svg').innerHTML = '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+    }
+}
+
+/* ---- Event Listeners ---- */
+let searchDelay;
+searchInput.addEventListener('input', () => {
+    clearTimeout(searchDelay);
+    searchDelay = setTimeout(processSearch, 80);
+});
+
+document.getElementById('searchCopyBtn').addEventListener('click', () => {
+    const output = searchOutput.value;
+    if (!output.trim()) {
+        showToast('No output to copy', true);
+        return;
+    }
+    copyToClipboard(output).then(() => showToast('Output copied!'));
+});
+
+document.getElementById('searchClearBtn').addEventListener('click', () => {
+    searchInput.value = '';
+    searchOutput.value = '';
+    updateSearchStats(0, 0, 0, 0);
+    updateByteCounter(0);
+    showToast('Cleared!');
+});
+
+// Initialize
+updateByteCounter(0);
+</script>
+</body>
+</html>
