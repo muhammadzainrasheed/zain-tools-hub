@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voucher Tool — Zain Tools Hub</title>
+    <title>Voucher Exports — Zain Tools Hub</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
@@ -12,13 +12,21 @@
 
 <!-- ===== NAVIGATION ===== -->
 <nav class="nav">
-    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <a href="../index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
     <div class="nav-links">
-        <a href="../index.html"              class="nav-btn">🏠 Home</a>
-        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
-        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
-        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
-        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+        <a href="../index.html"              class="nav-btn">Home</a>
+        <a href="word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="search-optimizer.html"      class="nav-btn">Search Terms</a>
     </div>
 </nav>
 
@@ -28,17 +36,19 @@
     <!-- Upload Zone -->
     <div id="voucher-upload" class="upload-drop-area">
         <div class="upload-box-styled" onclick="document.getElementById('fileInputVoucher').click()">
-            <div class="upload-icon">🎟️</div>
+            <div class="upload-icon">
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 010-4h12V0"/><path d="M4 6v12a2 2 0 002 2h14v-4"/><circle cx="18" cy="16" r="2"/></svg>
+            </div>
             <h3>Upload Voucher Excel File</h3>
-            <p>Filter & extract semicolon-separated ASINs for vouchers.<br>Supports .xlsx, .xls, .csv</p>
-            <button class="btn-upload" onclick="event.stopPropagation();">Select File</button>
+            <p>Filter &amp; extract semicolon-separated ASINs for voucher campaigns.<br>Supports .xlsx, .xls, .csv</p>
+            <button class="btn-upload" onclick="event.stopPropagation(); document.getElementById('fileInputVoucher').click();">Select File</button>
             <input type="file" id="fileInputVoucher" accept=".csv,.xlsx,.xls" style="display:none">
         </div>
     </div>
 
     <!-- Loading -->
     <div id="voucher-loading" class="loading-msg" style="display:none;">
-        ⚡ Processing your file...
+        <div class="spinner"></div> Processing your file...
     </div>
 
     <!-- Tool Layout -->
@@ -54,13 +64,10 @@
             <!-- Main Content -->
             <div class="tool-content">
 
-                <!-- Top Bar: Copy Button + Stats -->
+                <!-- Top Bar -->
                 <div class="voucher-top">
                     <button class="btn-copy-voucher" id="voucherCopyBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3z"/>
-                        </svg>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         <span>Copy ASINs for Voucher</span>
                     </button>
 
@@ -75,9 +82,9 @@
                         </div>
                     </div>
 
-                    <!-- Reset Button -->
                     <button class="btn-secondary" onclick="resetVoucher()" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
-                        🔄 Upload New File
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                        Upload New File
                     </button>
                 </div>
 
@@ -129,7 +136,7 @@ function handleVoucherFile(file) {
             const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             processVoucher(data);
         } catch (err) {
-            showToast('❌ Error parsing file. Please check format.', true);
+            showToast('Error parsing file. Please check format.', true);
             console.error(err);
             resetVoucher();
         }
@@ -144,7 +151,7 @@ function processVoucher(data) {
     })).filter(r => r.asin && ALLOWED_SET.has(r.account));
 
     if (rows.length === 0) {
-        showToast('❌ No valid data found for allowed accounts!', true);
+        showToast('No valid data found for allowed accounts!', true);
         resetVoucher();
         return;
     }
@@ -170,7 +177,7 @@ function buildVoucherSidebar() {
     Object.entries(groups).sort().forEach(([prefix, accs]) => {
         const title = document.createElement('div');
         title.className = 'sidebar-group-title';
-        title.textContent = prefix.toUpperCase() + ' Accounts';
+        title.textContent = prefix.toUpperCase();
         container.appendChild(title);
         accs.sort().forEach(acc => {
             const count = voucherAllData.filter(r => r.account === acc).length;
@@ -215,19 +222,19 @@ function filterVoucher(acc) {
 // Copy Button
 document.getElementById('voucherCopyBtn').addEventListener('click', () => {
     if (voucherFiltered.length === 0) {
-        showToast('⚠️ No ASINs available to copy', true);
+        showToast('No ASINs available to copy', true);
         return;
     }
     const text = voucherFiltered.map(r => r.asin).join(';');
-    navigator.clipboard.writeText(text).then(() => {
+    copyToClipboard(text).then(() => {
         const btn  = document.getElementById('voucherCopyBtn');
         const span = btn.querySelector('span');
         const orig = span.textContent;
-        span.textContent = 'Copied! ✅';
+        span.textContent = 'Copied!';
         btn.classList.add('copied');
-        showToast('✅ Semicolon-separated ASINs copied!');
+        showToast('Semicolon-separated ASINs copied!');
         setTimeout(() => { span.textContent = orig; btn.classList.remove('copied'); }, 2000);
-    }).catch(() => showToast('❌ Copy failed!', true));
+    }).catch(() => showToast('Copy failed!', true));
 });
 
 function resetVoucher() {
