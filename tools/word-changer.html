@@ -6,26 +6,26 @@
     <title>Word Changer — Zain Tools Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .word-page {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 62px);
-        }
-    </style>
 </head>
 <body>
 
 <!-- ===== NAVIGATION ===== -->
 <nav class="nav">
-    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <a href="../index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
     <div class="nav-links">
-        <a href="../index.html"              class="nav-btn">🏠 Home</a>
-        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
-        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
-        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
-        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+        <a href="../index.html"              class="nav-btn">Home</a>
+        <a href="word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="search-optimizer.html"      class="nav-btn">Search Terms</a>
     </div>
 </nav>
 
@@ -33,22 +33,20 @@
 <div class="word-page">
 
     <div class="word-header">
-        <h2>✏️ Word Changer</h2>
-        <p>Type or paste a word to generate safe Amazon variations</p>
+        <h2>
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Word Changer
+        </h2>
+        <p>Type or paste a word to generate safe Amazon-compatible Unicode variations</p>
     </div>
 
     <div class="word-input-wrap">
-        <input
-            type="text"
-            id="wordInput"
-            placeholder="Type or paste a word here..."
-            autocomplete="off"
-        />
+        <input type="text" id="wordInput" placeholder="Type or paste a word here..." autocomplete="off" />
     </div>
 
-    <!-- Warning Banner (shown for banned words) -->
+    <!-- Warning Banner -->
     <div id="warningBanner" class="warning-banner" style="display:none;">
-        ⚠️ This word is BANNED on Amazon. Variations cannot be generated.
+        This word is BANNED on Amazon. Variations cannot be generated.
     </div>
 
     <!-- Results -->
@@ -56,7 +54,9 @@
 
     <!-- Empty State -->
     <div id="emptyState" class="empty-state">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">✍️</div>
+        <div class="empty-icon">
+            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
         <h3>Ready to Generate</h3>
         <p>Press Enter or paste a word to generate safe variations</p>
     </div>
@@ -71,55 +71,38 @@
 
 const bannedWords = [
     'anxiety','cancer','alzheimer','crabs','cure','treat','prevent','diagnose','therapy',
+    'healing','heals','pain relief','painkiller','analgesic','weight loss','fat burner',
+    'blood pressure','diabetes','cholesterol','infection','disease','illness','syndrome',
+    'clinical','clinically','prescription','pharmaceutical','medical','medicine',
     'cbd','thc','marijuana','cannabis','hemp oil','drug','drugs','narcotic',
-    'best','top','most','number one','#1','leading','ultimate',
-    'guarantee','guaranteed','certified','approved','tested','validated','proven',
-    'free shipping','best seller','bestseller','top rated','high quality','premium quality',
-    'unlike other brands','better than','buy with confidence','money back',
-    'satisfaction guaranteed','recommended by','doctor recommended','clinically proven',
-    'fda approved','fda','epa registered','organic','all natural','natural',
-    'non-toxic','kills bacteria','antibacterial','antiviral','antimicrobial',
-    'disinfectant','eliminates','removes','cures','heals','healing',
-    'aids','hiv','autism','autistic','adhd','add','ocd',
-    'covid','covid19','covid-19','coronavirus','pandemic','epidemic',
-    'pain free','pain relief','pain killer','painkiller','analgesic',
-    'anti aging','anti-aging','antiaging','wrinkle free','age defying',
-    'weight loss','lose weight','fat burner','fat loss','slimming',
-    'metabolism','metabolic','cholesterol','blood pressure','hypertension',
-    'diabetes','diabetic','blood sugar','glucose','insulin',
-    'infection','virus','bacteria','disease','illness','syndrome',
-    'medical','medicine','clinical','clinically','prescription','pharmaceutical',
     'ketamine','kratom','ephedrine','codeine','morphine','opioid',
     'steroid','hormone','testosterone','hgh','growth hormone',
-    'amazon','kindle','alexa','echo','fire tv','prime',
-    'iphone','ipad','apple','samsung','sony','lg','dell',
-    'adidas','nike','puma','reebok','under armour',
-    'nintendo','playstation','xbox','ps4','ps5',
-    'eco-friendly','environmentally friendly','green','sustainable','carbon neutral',
-    'cheapest','lowest price','best price','sale','discount','deal','offer',
-    'limited time','hurry','act now','today only','clearance','promotional',
-    'lifetime warranty','warranty','refund','return policy','exchange'
+    'best','top','most','number one','#1','leading','ultimate',
+    'guarantee','guaranteed','certified','approved','proven','clinically proven',
+    'doctor recommended','fda approved','organic','all natural',
+    'amazon','kindle','alexa','apple','samsung','iphone','ipad',
+    'nike','adidas','nintendo','playstation','xbox',
+    'free shipping','best seller','lowest price','sale','discount',
+    'limited time','clearance','lifetime warranty','money back','satisfaction guaranteed'
 ];
 
 const safeCharMap = {
-    'a': ['á', 'à', 'â', 'ä', 'å'],
-    'e': ['é', 'è', 'ê', 'ë'],
-    'i': ['í', 'ì', 'î', 'ï'],
-    'o': ['ó', 'ò', 'ô', 'ö', 'õ'],
-    'u': ['ú', 'ù', 'û', 'ü'],
+    'a': ['á','à','â','ä','å'],
+    'e': ['é','è','ê','ë'],
+    'i': ['í','ì','î','ï'],
+    'o': ['ó','ò','ô','ö','õ'],
+    'u': ['ú','ù','û','ü'],
     'c': ['ç'],
     'n': ['ñ'],
     's': ['š'],
     'z': ['ž'],
-    'y': ['ý', 'ÿ']
+    'y': ['ý','ÿ']
 };
 
 // Auto-focus on load
-window.addEventListener('load', () => {
-    document.getElementById('wordInput').focus();
-});
+window.addEventListener('load', () => document.getElementById('wordInput').focus());
 
-// Paste anywhere on the page → auto fills input
+// Paste anywhere → auto fills input
 document.addEventListener('paste', (e) => {
     const activeTag = document.activeElement.tagName.toLowerCase();
     if (activeTag === 'textarea' || activeTag === 'input') return;
@@ -207,12 +190,12 @@ function createBannedCard(word) {
     const d = document.createElement('div');
     d.className = 'word-card banned-word';
     d.innerHTML = `
-        <svg style="width:2.5rem;height:2.5rem;color:white;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
+        <svg style="width:2.2rem;height:2.2rem;color:white;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
         </svg>
         <div style="flex:1">
             <span class="main-word" style="display:block">${word}</span>
-            <span style="display:block;margin-top:0.3rem;color:white;font-weight:700;font-size:0.9rem;opacity:0.9">🚫 BANNED WORD — Cannot generate variations</span>
+            <span style="display:block;margin-top:0.3rem;color:white;font-weight:700;font-size:0.85rem;opacity:0.9">BANNED WORD — Cannot generate variations</span>
         </div>`;
     return d;
 }
@@ -223,30 +206,21 @@ function createVariationCard(word) {
     d.title = 'Click to copy';
     d.onclick = () => copyWord(word, d);
     d.innerHTML = `
-        <svg style="width:2.2rem;height:2.2rem;color:white;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
+        <svg style="width:2rem;height:2rem;color:white;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         <span class="main-word">${word}</span>
-        <span class="word-badge">✓ SAFE</span>`;
+        <span class="word-badge">SAFE</span>`;
     return d;
 }
 
 function copyWord(text, card) {
-    navigator.clipboard.writeText(text).then(() => {
-        showToast('✓ Copied: ' + text);
+    copyToClipboard(text).then(() => {
+        showToast('Copied: ' + text);
         const badge = card.querySelector('.word-badge');
         const orig = badge.textContent;
-        badge.textContent = '✅ Copied!';
+        badge.textContent = 'Copied!';
         setTimeout(() => badge.textContent = orig, 1500);
-    }).catch(() => {
-        // Fallback for older browsers
-        const tmp = document.createElement('textarea');
-        tmp.value = text;
-        document.body.appendChild(tmp);
-        tmp.select();
-        try { document.execCommand('copy'); showToast('✓ Copied: ' + text); }
-        catch(e) { showToast('❌ Failed to copy', true); }
-        document.body.removeChild(tmp);
     });
 }
 </script>
