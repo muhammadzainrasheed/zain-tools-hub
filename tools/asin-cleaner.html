@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,13 +11,21 @@
 
 <!-- ===== NAVIGATION ===== -->
 <nav class="nav">
-    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <a href="../index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
     <div class="nav-links">
-        <a href="../index.html"              class="nav-btn">🏠 Home</a>
-        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
-        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
-        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
-        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+        <a href="../index.html"              class="nav-btn">Home</a>
+        <a href="word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="search-optimizer.html"      class="nav-btn">Search Terms</a>
     </div>
 </nav>
 
@@ -26,26 +33,23 @@
 <div style="padding: 2rem;">
     <div class="cleaner-wrap">
 
-        <h2>🧹 ASIN Cleaner Tool</h2>
+        <h2>
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            ASIN Cleaner
+        </h2>
 
         <div class="cleaner-grid">
             <!-- Valid ASINs -->
             <div>
-                <p class="cleaner-label valid">✅ Valid ASINs (semicolon or newline separated)</p>
-                <textarea
-                    id="validAsins"
-                    class="cleaner-textarea"
-                    placeholder="B0FKNC23V6;B0FLYFJTZQ;B0FLYMQSTP..."></textarea>
+                <p class="cleaner-label valid">Valid ASINs (semicolon or newline separated)</p>
+                <textarea id="validAsins" class="cleaner-textarea" placeholder="B0FKNC23V6;B0FLYFJTZQ;B0FLYMQSTP..."></textarea>
                 <p class="cleaner-count">Total: <span id="validCount">0</span> ASINs</p>
             </div>
 
             <!-- Problematic ASINs -->
             <div>
-                <p class="cleaner-label prob">❌ Problematic ASINs (paste Amazon error messages)</p>
-                <textarea
-                    id="problematicAsins"
-                    class="cleaner-textarea"
-                    placeholder="B0FQBWM91R&#10;Restricted product&#10;This ASIN is identified as an adult product...&#10;&#10;B0FNMJPQ5L&#10;Restricted product..."></textarea>
+                <p class="cleaner-label prob">Problematic ASINs (paste Amazon error messages)</p>
+                <textarea id="problematicAsins" class="cleaner-textarea" placeholder="B0FQBWM91R&#10;Restricted product&#10;This ASIN is identified as an adult product...&#10;&#10;B0FNMJPQ5L&#10;Restricted product..."></textarea>
                 <p class="cleaner-count">Detected: <span id="problematicCount">0</span> ASINs</p>
             </div>
         </div>
@@ -53,20 +57,16 @@
         <!-- Action Buttons -->
         <div class="cleaner-btns">
             <button class="btn-primary" onclick="cleanAsins()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Clean ASINs
             </button>
             <button class="btn-secondary" onclick="resetCleaner()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 Reset
             </button>
         </div>
 
-        <!-- Stats Row (hidden initially) -->
+        <!-- Stats Row -->
         <div id="cleanerStats" style="display:none;">
             <div class="stats-row">
                 <div class="stat-box blue">
@@ -84,21 +84,17 @@
             </div>
         </div>
 
-        <!-- Output (hidden initially) -->
+        <!-- Output -->
         <div id="cleanerOutput" style="display:none;">
             <div class="output-header">
-                <span class="output-label">✅ Cleaned ASINs (Ready to Use!)</span>
+                <span class="output-label">Cleaned ASINs (Ready to Use)</span>
                 <div class="output-btns">
                     <button class="btn-green" onclick="copyCleanedAsins()">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                        </svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         Copy
                     </button>
                     <button class="btn-blue" onclick="downloadCleaned()">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         Download
                     </button>
                 </div>
@@ -131,7 +127,7 @@ function cleanAsins() {
         .split(/[;\n]/).map(a => a.trim()).filter(a => a);
 
     if (validList.length === 0) {
-        showToast('❌ Please paste Valid ASINs first', true);
+        showToast('Please paste Valid ASINs first', true);
         return;
     }
 
@@ -139,7 +135,7 @@ function cleanAsins() {
     const problemSet  = new Set(probMatches || []);
     const cleaned     = validList.filter(a => !problemSet.has(a));
 
-    document.getElementById('cleanedAsins').value    = cleaned.join(';');
+    document.getElementById('cleanedAsins').value      = cleaned.join(';');
     document.getElementById('totalStats').textContent   = validList.length;
     document.getElementById('removedStats').textContent = validList.length - cleaned.length;
     document.getElementById('finalStats').textContent   = cleaned.length;
@@ -147,18 +143,18 @@ function cleanAsins() {
     document.getElementById('cleanerStats').style.display  = 'block';
     document.getElementById('cleanerOutput').style.display = 'block';
 
-    showToast(`✅ Done! ${cleaned.length} clean ASINs ready.`);
+    showToast(`Done! ${cleaned.length} clean ASINs ready.`);
 }
 
 function copyCleanedAsins() {
     const text = document.getElementById('cleanedAsins').value;
-    if (!text) { showToast('⚠️ Nothing to copy!', true); return; }
-    navigator.clipboard.writeText(text).then(() => showToast('✅ Cleaned ASINs copied!'));
+    if (!text) { showToast('Nothing to copy!', true); return; }
+    copyToClipboard(text).then(() => showToast('Cleaned ASINs copied!'));
 }
 
 function downloadCleaned() {
     const text = document.getElementById('cleanedAsins').value;
-    if (!text) { showToast('⚠️ Nothing to download!', true); return; }
+    if (!text) { showToast('Nothing to download!', true); return; }
     const blob = new Blob([text], { type: 'text/plain' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
@@ -166,19 +162,19 @@ function downloadCleaned() {
     a.download = 'cleaned_asins.txt';
     a.click();
     URL.revokeObjectURL(url);
-    showToast('✅ File downloaded!');
+    showToast('File downloaded!');
 }
 
 function resetCleaner() {
-    ['validAsins', 'problematicAsins', 'cleanedAsins'].forEach(id => {
+    ['validAsins','problematicAsins','cleanedAsins'].forEach(id => {
         document.getElementById(id).value = '';
     });
-    ['validCount', 'problematicCount'].forEach(id => {
+    ['validCount','problematicCount'].forEach(id => {
         document.getElementById(id).textContent = '0';
     });
     document.getElementById('cleanerStats').style.display  = 'none';
     document.getElementById('cleanerOutput').style.display = 'none';
-    showToast('🔄 Reset done!');
+    showToast('Reset done!');
 }
 </script>
 </body>
