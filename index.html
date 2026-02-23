@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zain Tools Hub</title>
+    <title>Zain Tools Hub — Amazon Seller Toolkit</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -11,50 +11,94 @@
 
 <!-- ===== NAVIGATION ===== -->
 <nav class="nav">
-    <a href="index.html" class="nav-brand">⚡ Zain Tools</a>
+    <a href="index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
     <div class="nav-links">
-        <a href="index.html"                    class="nav-btn">🏠 Home</a>
-        <a href="tools/word-changer.html"       class="nav-btn">✏️ Word Changer</a>
-        <a href="tools/asin-cleaner.html"       class="nav-btn">🧹 ASIN Cleaner</a>
-        <a href="tools/asin-splitter.html"      class="nav-btn">📦 ASIN 900</a>
-        <a href="tools/voucher-tool.html"       class="nav-btn">🎟️ Vouchers</a>
+        <a href="index.html"                       class="nav-btn">Home</a>
+        <a href="tools/word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="tools/asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="tools/asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="tools/voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="tools/duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="tools/search-optimizer.html"      class="nav-btn">Search Terms</a>
     </div>
 </nav>
 
 <!-- ===== HOME PAGE ===== -->
-<div class="home-grid">
-    <div style="font-size: 4rem; margin-bottom: 1rem;">⚡</div>
-    <h1 class="home-title">Zain Tools Hub</h1>
-    <p class="home-sub">All your essential Amazon management tools unified in one professional platform.</p>
-
-    <div class="tools-grid">
-
-        <a href="tools/word-changer.html" class="tool-card">
-            <div class="icon">✏️</div>
-            <h3>Word Changer</h3>
-            <p>Generate safe word variations and detect banned Amazon keywords instantly.</p>
-        </a>
-
-        <a href="tools/asin-cleaner.html" class="tool-card">
-            <div class="icon">🧹</div>
-            <h3>ASIN Cleaner</h3>
-            <p>Compare valid lists with error reports to remove problematic ASINs automatically.</p>
-        </a>
-
-        <a href="tools/asin-splitter.html" class="tool-card">
-            <div class="icon">📦</div>
-            <h3>ASIN 900 Grouping</h3>
-            <p>Auto-split ASINs into formatted groups of 900, categorized by correct brand account.</p>
-        </a>
-
-        <a href="tools/voucher-tool.html" class="tool-card">
-            <div class="icon">🎟️</div>
-            <h3>Voucher Exports</h3>
-            <p>Instantly extract and format semicolon-separated ASINs strictly for Voucher campaigns.</p>
-        </a>
-
+<div class="home-hero">
+    <div class="home-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
     </div>
+    <h1 class="home-title">Zain <span>Tools Hub</span></h1>
+    <p class="home-sub">Your complete Amazon seller toolkit. Professional tools for keyword optimization, ASIN management, and listing compliance — all in one place.</p>
 </div>
+
+<div class="tools-grid">
+
+    <a href="tools/word-changer.html" class="tool-card">
+        <div class="icon purple">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <h3>Word Changer</h3>
+        <p>Generate safe Unicode word variations and detect banned Amazon keywords instantly.</p>
+        <svg class="card-arrow" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="tools/asin-cleaner.html" class="tool-card">
+        <div class="icon blue">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>ASIN Cleaner</h3>
+        <p>Compare valid ASIN lists with error reports to remove problematic ASINs automatically.</p>
+        <svg class="card-arrow" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="tools/asin-splitter.html" class="tool-card">
+        <div class="icon green">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h5v11a2 2 0 01-2 2H8"/><line x1="5" y1="7" x2="12" y2="7"/><line x1="5" y1="10" x2="12" y2="10"/></svg>
+        </div>
+        <h3>ASIN 900 Splitter</h3>
+        <p>Auto-split ASINs into formatted groups of 900, categorized by brand account.</p>
+        <svg class="card-arrow" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="tools/voucher-tool.html" class="tool-card">
+        <div class="icon pink">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 010-4h12V0"/><path d="M4 6v12a2 2 0 002 2h14v-4"/><circle cx="18" cy="16" r="2"/></svg>
+        </div>
+        <h3>Voucher Exports</h3>
+        <p>Extract and format semicolon-separated ASINs for Amazon voucher campaigns.</p>
+        <svg class="card-arrow" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="tools/duplicate-variator.html" class="tool-card">
+        <div class="icon orange">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+        </div>
+        <h3>Duplicate Variator</h3>
+        <p>Automatically replace repeated words in titles with safe Unicode variants to bypass duplication penalties.</p>
+        <svg class="card-arrow" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="tools/search-optimizer.html" class="tool-card">
+        <div class="icon cyan">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Search Terms Optimizer</h3>
+        <p>Clean, normalize, and deduplicate keywords to fit Amazon's 249-byte Search Terms limit.</p>
+        <svg class="card-arrow" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+</div>
+
+<footer class="site-footer">
+    Zain Tools Hub &mdash; Professional Amazon Seller Toolkit
+</footer>
 
 <script src="js/main.js"></script>
 </body>
