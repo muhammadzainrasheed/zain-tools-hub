@@ -12,13 +12,21 @@
 
 <!-- ===== NAVIGATION ===== -->
 <nav class="nav">
-    <a href="../index.html" class="nav-brand">⚡ Zain Tools</a>
+    <a href="../index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
     <div class="nav-links">
-        <a href="../index.html"              class="nav-btn">🏠 Home</a>
-        <a href="word-changer.html"          class="nav-btn">✏️ Word Changer</a>
-        <a href="asin-cleaner.html"          class="nav-btn">🧹 ASIN Cleaner</a>
-        <a href="asin-splitter.html"         class="nav-btn">📦 ASIN 900</a>
-        <a href="voucher-tool.html"          class="nav-btn">🎟️ Vouchers</a>
+        <a href="../index.html"              class="nav-btn">Home</a>
+        <a href="word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="search-optimizer.html"      class="nav-btn">Search Terms</a>
     </div>
 </nav>
 
@@ -28,20 +36,22 @@
     <!-- Upload Zone -->
     <div id="asin900-upload" class="upload-drop-area">
         <div class="upload-box-styled" onclick="document.getElementById('fileInput900').click()">
-            <div class="upload-icon">📦</div>
+            <div class="upload-icon">
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h5v11a2 2 0 01-2 2H8"/><line x1="5" y1="7" x2="12" y2="7"/><line x1="5" y1="10" x2="12" y2="10"/></svg>
+            </div>
             <h3>Upload ASIN Excel File</h3>
             <p>Auto-split ASINs by account into chunks of 900.<br>Supports .xlsx, .xls, .csv</p>
-            <button class="btn-upload" onclick="event.stopPropagation();">Select File</button>
+            <button class="btn-upload" onclick="event.stopPropagation(); document.getElementById('fileInput900').click();">Select File</button>
             <input type="file" id="fileInput900" accept=".csv,.xlsx,.xls" style="display:none">
         </div>
     </div>
 
     <!-- Loading -->
     <div id="asin900-loading" class="loading-msg" style="display:none;">
-        ⚡ Processing your file...
+        <div class="spinner"></div> Processing your file...
     </div>
 
-    <!-- Tool Layout (sidebar + content) -->
+    <!-- Tool Layout -->
     <div id="asin900-tool" style="display:none; flex:1; overflow:hidden;">
         <div class="tool-body">
             <!-- Sidebar -->
@@ -63,7 +73,8 @@
                 <!-- Reset Button -->
                 <div style="margin-bottom: 1.5rem;">
                     <button class="btn-secondary" onclick="reset900()" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
-                        🔄 Upload New File
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                        Upload New File
                     </button>
                 </div>
 
@@ -109,7 +120,7 @@ function handleAsin900File(file) {
             const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             processAsin900(data);
         } catch (err) {
-            showToast('❌ Error parsing file. Please check format.', true);
+            showToast('Error parsing file. Please check format.', true);
             console.error(err);
             reset900();
         }
@@ -124,7 +135,7 @@ function processAsin900(data) {
     })).filter(r => r.asin && ALLOWED_SET.has(r.account));
 
     if (rows.length === 0) {
-        showToast('❌ No valid data found for allowed accounts!', true);
+        showToast('No valid data found for allowed accounts!', true);
         reset900();
         return;
     }
@@ -144,8 +155,7 @@ function processAsin900(data) {
     });
 
     document.getElementById('asin900-loading').style.display = 'none';
-    const toolEl = document.getElementById('asin900-tool');
-    toolEl.style.display = 'flex';
+    document.getElementById('asin900-tool').style.display    = 'flex';
 
     build900Sidebar();
     show900Content('all');
@@ -164,7 +174,7 @@ function build900Sidebar() {
     Object.entries(groups).sort().forEach(([prefix, accs]) => {
         const title = document.createElement('div');
         title.className = 'sidebar-group-title';
-        title.textContent = prefix.toUpperCase() + ' Accounts';
+        title.textContent = prefix.toUpperCase();
         container.appendChild(title);
         accs.sort().forEach(acc => {
             const count = asin900Data[acc].reduce((s, g) => s + g.length, 0);
@@ -233,18 +243,16 @@ function show900Content(filter) {
     document.getElementById('a9-showing').textContent = totalShowing;
 }
 
-window.copy900Group = function (btn, acc, idx) {
+window.copy900Group = function(btn, acc, idx) {
     const text = asin900Data[acc][idx].join('\n');
     const orig = btn.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-        btn.textContent = 'Copied! ✅';
+    copyToClipboard(text).then(() => {
+        btn.textContent = 'Copied!';
         btn.classList.add('copied');
-        showToast(`✅ Copied Group ${idx + 1} from ${acc.toUpperCase()}`);
+        showToast(`Copied Group ${idx + 1} from ${acc.toUpperCase()}`);
         setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
     }).catch(() => {
-        showToast('❌ Copy failed!', true);
-        btn.textContent = 'Failed!';
-        setTimeout(() => btn.textContent = orig, 2000);
+        showToast('Copy failed!', true);
     });
 };
 
