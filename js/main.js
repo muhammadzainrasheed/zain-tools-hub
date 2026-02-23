@@ -27,6 +27,7 @@ const ACCOUNTS_LIST = [
     'yfeide','yfeise','yfeiuk','yfeinl','yfeiit','yfeifr','yfeies','yfeibe',
     'priobe','priose','prionl','prioit','priofr','prioes','priode','priouk',
     'cordbe','cordse','cordnl','cordit','cordfr','cordes','cordde','corduk',
+    'tayxbe','tayxse','tayxnl','tayxit','tayxfr','tayxes','tayxde','tayxuk',
     'bodakbe','bodakse','bodakuk','bodaknl','bodakit','bodakfr','bodakes','bodakde',
     'llclbuk','llclbse','llclbbe','llclbnl','llclbit','llclbfr','llclbes','llclbde'
 ];
