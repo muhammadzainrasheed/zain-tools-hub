@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duplicate Variator — Zain Tools Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+    <a href="../index.html" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Zain Tools
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="nav-links">
+        <a href="../index.html"              class="nav-btn">Home</a>
+        <a href="word-changer.html"          class="nav-btn">Word Changer</a>
+        <a href="asin-cleaner.html"          class="nav-btn">ASIN Cleaner</a>
+        <a href="asin-splitter.html"         class="nav-btn">ASIN 900</a>
+        <a href="voucher-tool.html"          class="nav-btn">Vouchers</a>
+        <a href="duplicate-variator.html"    class="nav-btn">Variator</a>
+        <a href="search-optimizer.html"      class="nav-btn">Search Terms</a>
+    </div>
+</nav>
+
+<!-- ===== DUPLICATE VARIATOR PAGE ===== -->
+<div class="variator-page">
+    <div class="variator-wrap">
+
+        <h2>
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+            Auto Duplicate Word Variator
+        </h2>
+        <p class="variator-sub">Paste a full Amazon product title. Repeated words will be automatically replaced with safe Unicode variants to bypass duplication penalties.</p>
+
+        <!-- Settings Bar -->
+        <div class="settings-bar">
+            <div class="setting-group">
+                <label for="dupThreshold">Replace from</label>
+                <span id="thresholdValue" class="slider-value">3</span>
+                <span>occurrence onwards</span>
+                <input type="range" id="dupThreshold" min="2" max="4" value="3">
+            </div>
+            <div class="setting-group">
+                <span>Characters:</span>
+                <span id="inputCharCount" class="char-count-value">0</span>
+            </div>
+            <div class="setting-group">
+                <span>Words:</span>
+                <span id="inputWordCount" class="char-count-value">0</span>
+            </div>
+        </div>
+
+        <!-- Input + Duplicate Analysis -->
+        <div class="variator-grid">
+            <div>
+                <label class="section-label">Input Title</label>
+                <textarea id="varInput" class="variator-textarea" placeholder="Paste your Amazon product title here..." style="min-height:180px;"></textarea>
+                <div style="margin-top:0.3rem; display:flex; justify-content:space-between;">
+                    <span id="inputCharLabel" style="font-size:0.82rem; color:var(--text-muted);">0 / 200 characters</span>
+                </div>
+            </div>
+            <div>
+                <label class="section-label">Duplicate Analysis</label>
+                <div id="dupInfo" class="dup-box">
+                    <p class="no-dup">No text processed yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output -->
+        <label class="section-label">Output Title</label>
+        <textarea id="varOutput" class="variator-textarea" style="min-height:120px;"></textarea>
+        <div style="margin-top:0.3rem; display:flex; justify-content:space-between;">
+            <span id="outputCharLabel" style="font-size:0.82rem; color:var(--text-muted);">0 / 200 characters</span>
+        </div>
+
+        <!-- Actions -->
+        <div class="variator-actions">
+            <button class="btn-primary" id="varCopyBtn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                Copy Output
+            </button>
+            <button class="btn-secondary" id="varClearBtn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                Clear
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+/* ================================================
+   AUTO DUPLICATE WORD VARIATOR — Tool Logic
+   ================================================ */
+
+// Use the safe map from main.js: VARIATOR_SAFE_MAP
+
+const varInput     = document.getElementById('varInput');
+const varOutput    = document.getElementById('varOutput');
+const dupInfo      = document.getElementById('dupInfo');
+const thresholdEl  = document.getElementById('dupThreshold');
+const thresholdVal = document.getElementById('thresholdValue');
+
+// Highlight colors for duplicate words
+const highlightColors = [
+    '#7c3aed','#2563eb','#16a34a','#ef4444','#f59e0b',
+    '#06b6d4','#db2777','#8b5cf6','#059669','#d97706'
+];
+
+/* ---- Threshold Slider ---- */
+function updateThresholdDisplay() {
+    thresholdVal.textContent = thresholdEl.value;
+}
+updateThresholdDisplay();
+thresholdEl.addEventListener('input', () => {
+    updateThresholdDisplay();
+    processVariator();
+});
+
+/* ---- Tokenizer (preserves whitespace & punctuation) ---- */
+function tokenize(input) {
+    return input.match(/\S+|\s+/g) || [input];
+}
+
+/* ---- Normalize word for frequency counting ---- */
+function normalizeWord(w) {
+    return w.normalize('NFC')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, '');
+}
+
+/* ---- Build frequency map ---- */
+function countWords(tokens) {
+    const counts = {};
+    const originals = {};
+    for (const token of tokens) {
+        if (/\p{L}/u.test(token)) {
+            const key = normalizeWord(token);
+            if (!key) continue;
+            if (!counts[key]) {
+                counts[key] = 1;
+                originals[key] = token;
+            } else {
+                counts[key]++;
+            }
+        }
+    }
+    return { counts, originals };
+}
+
+/* ---- Apply variation to a single token ---- */
+function applyVariation(token) {
+    const lower = token.toLowerCase();
+    const chars = [...lower];
+    const modifiable = [];
+    for (let i = 0; i < chars.length; i++) {
+        if (VARIATOR_SAFE_MAP[chars[i]]) {
+            modifiable.push(i);
+        }
+    }
+    if (modifiable.length === 0) return token;
+
+    const idx = modifiable[Math.floor(Math.random() * modifiable.length)];
+    const options = VARIATOR_SAFE_MAP[chars[idx]];
+    const replacement = options[Math.floor(Math.random() * options.length)];
+
+    // Preserve original case
+    const originalChar = token[idx];
+    const isUpper = originalChar === originalChar.toUpperCase() && originalChar !== originalChar.toLowerCase();
+    chars[idx] = isUpper ? replacement.toUpperCase() : replacement;
+
+    // Rebuild with original casing for other chars
+    let result = '';
+    for (let i = 0; i < chars.length; i++) {
+        if (i === idx) {
+            result += chars[i];
+        } else {
+            result += token[i] || chars[i];
+        }
+    }
+    return result;
+}
+
+/* ---- Transform tokens ---- */
+function transformTokens(tokens, counts, threshold) {
+    const seen = {};
+    const out = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+        const raw = tokens[i];
+        if (/\p{L}/u.test(raw)) {
+            const key = normalizeWord(raw);
+            if (!key) { out.push(raw); continue; }
+            seen[key] = (seen[key] || 0) + 1;
+
+            if (counts[key] >= threshold && seen[key] >= threshold) {
+                out.push(applyVariation(raw));
+            } else {
+                out.push(raw);
+            }
+        } else {
+            out.push(raw);
+        }
+    }
+    return out;
+}
+
+/* ---- Render duplicate analysis ---- */
+function renderDupInfo(counts, originals, threshold) {
+    const dups = Object.entries(counts).filter(([_, c]) => c >= threshold);
+
+    if (dups.length === 0) {
+        dupInfo.innerHTML = '<p class="no-dup">No duplications above threshold found.</p>';
+        return;
+    }
+
+    let html = '<ul>';
+    dups.forEach(([key, count], idx) => {
+        const color = highlightColors[idx % highlightColors.length];
+        html += `<li>
+            <span class="dup-tag" style="background:${color}; color:white;">${originals[key]}</span>
+            &times;${count}
+        </li>`;
+    });
+    html += '</ul>';
+    dupInfo.innerHTML = html;
+}
+
+/* ---- Update character & word counts ---- */
+function updateCounts() {
+    const inputText = varInput.value;
+    const outputText = varOutput.value;
+
+    const inputLen = inputText.length;
+    const outputLen = outputText.length;
+    const wordCount = inputText.trim() ? inputText.trim().split(/\s+/).length : 0;
+
+    document.getElementById('inputCharCount').textContent = inputLen;
+    document.getElementById('inputWordCount').textContent = wordCount;
+
+    const inputLabel = document.getElementById('inputCharLabel');
+    inputLabel.textContent = `${inputLen} / 200 characters`;
+    inputLabel.style.color = inputLen > 200 ? 'var(--danger)' : 'var(--text-muted)';
+
+    const outputLabel = document.getElementById('outputCharLabel');
+    outputLabel.textContent = `${outputLen} / 200 characters`;
+    outputLabel.style.color = outputLen > 200 ? 'var(--danger)' : 'var(--text-muted)';
+}
+
+/* ---- Main processing ---- */
+function processVariator() {
+    const text = varInput.value;
+
+    if (!text.trim()) {
+        varOutput.value = '';
+        dupInfo.innerHTML = '<p class="no-dup">No text processed yet.</p>';
+        updateCounts();
+        return;
+    }
+
+    const threshold = Number(thresholdEl.value);
+    const tokens = tokenize(text);
+    const { counts, originals } = countWords(tokens);
+
+    renderDupInfo(counts, originals, threshold);
+
+    const transformed = transformTokens(tokens, counts, threshold);
+    varOutput.value = transformed.join('');
+
+    updateCounts();
+}
+
+/* ---- Event Listeners ---- */
+let typingDelay;
+varInput.addEventListener('input', () => {
+    clearTimeout(typingDelay);
+    typingDelay = setTimeout(processVariator, 80);
+});
+
+document.getElementById('varCopyBtn').addEventListener('click', () => {
+    const output = varOutput.value;
+    if (!output.trim()) {
+        showToast('No output to copy', true);
+        return;
+    }
+    copyToClipboard(output).then(() => showToast('Output copied!'));
+});
+
+document.getElementById('varClearBtn').addEventListener('click', () => {
+    varInput.value = '';
+    varOutput.value = '';
+    dupInfo.innerHTML = '<p class="no-dup">No text processed yet.</p>';
+    updateCounts();
+    showToast('Cleared!');
+});
+
+// Initialize
+updateCounts();
+</script>
+</body>
+</html>
