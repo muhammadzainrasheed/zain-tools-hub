@@ -7,13 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* ── Page wrapper ── */
         .variator-page {
             padding: 2rem;
             max-width: 1100px;
             margin: 0 auto;
         }
-
         .variator-wrap > h2 {
             display: flex;
             align-items: center;
@@ -25,214 +23,188 @@
         }
         .variator-sub {
             color: rgba(255,255,255,.5);
-            font-size: .95rem;
-            margin-bottom: 1.8rem;
-            max-width: 780px;
+            font-size: .92rem;
+            margin-bottom: 1.4rem;
+            max-width: 820px;
+            line-height: 1.6;
         }
 
-        /* ── Settings bar ── */
-        .settings-bar {
+        /* ── Language badges ── */
+        .lang-badges {
             display: flex;
-            align-items: center;
-            gap: 1.5rem;
+            gap: .4rem;
             flex-wrap: wrap;
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 14px;
-            padding: 1rem 1.4rem;
-            margin-bottom: 1.6rem;
-            font-size: .9rem;
-            color: rgba(255,255,255,.7);
-        }
-        .setting-group {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            white-space: nowrap;
-        }
-        .setting-group label { font-weight: 600; }
-        .slider-value {
-            font-weight: 800;
-            color: #a78bfa;
-            font-size: 1.05rem;
-            min-width: 18px;
-            text-align: center;
-        }
-        input[type="range"] {
-            width: 100px;
-            accent-color: #7c3aed;
-        }
-        .char-count-value {
-            font-weight: 700;
-            color: #fff;
-        }
-
-        /* ── Grid: input + analysis ── */
-        .variator-grid {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 1.4rem;
             margin-bottom: 1.4rem;
         }
-        @media(max-width:800px){ .variator-grid{ grid-template-columns:1fr; } }
-
-        .section-label {
-            display: block;
-            font-size: .78rem;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,.45);
-            margin-bottom: .5rem;
-        }
-
-        .variator-textarea {
-            width: 100%;
-            padding: 1rem 1.1rem;
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.15);
-            border-radius: 12px;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-size: .93rem;
-            line-height: 1.6;
-            resize: vertical;
-            outline: none;
-            transition: border-color .2s;
-            box-sizing: border-box;
-        }
-        .variator-textarea:focus { border-color: #a78bfa; }
-        .variator-textarea[readonly] { background: rgba(255,255,255,.03); cursor: default; }
-
-        .char-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: .35rem;
-            font-size: .8rem;
-            color: rgba(255,255,255,.4);
-        }
-        .char-row.over { color: #f87171 !important; font-weight: 700; }
-
-        /* ── Duplicate analysis box ── */
-        .dup-box {
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 12px;
-            padding: 1rem 1.1rem;
-            min-height: 180px;
-            font-size: .88rem;
-        }
-        .no-dup {
-            color: #34d399;
-            font-weight: 600;
-            margin: 0;
-        }
-        .dup-box ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-        }
-        .dup-box li {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            color: rgba(255,255,255,.75);
-            font-size: .86rem;
-        }
-        .dup-tag {
-            display: inline-block;
-            padding: .2rem .7rem;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: .82rem;
-            letter-spacing: .02em;
-        }
-        .dup-count {
-            color: rgba(255,255,255,.5);
-            font-size: .82rem;
-        }
-
-        /* ── Output section ── */
-        .output-section { margin-bottom: 1.2rem; }
-
-        .output-label-row {
-            display: flex;
-            align-items: center;
-            gap: .7rem;
-            margin-bottom: .5rem;
-        }
-        .output-badge {
-            font-size: .72rem;
-            font-weight: 700;
-            padding: .2rem .65rem;
-            border-radius: 5px;
-            letter-spacing: .05em;
-        }
-        .badge-full { background: rgba(124,58,237,.25); color: #c4b5fd; border: 1px solid rgba(124,58,237,.4); }
-        .badge-trunc { background: rgba(245,158,11,.2); color: #fbbf24; border: 1px solid rgba(245,158,11,.4); }
-
-        .trunc-note {
-            font-size: .82rem;
-            color: rgba(255,255,255,.4);
-            margin-bottom: .5rem;
-            line-height: 1.5;
-        }
-
-        /* ── Actions row ── */
-        .variator-actions {
-            display: flex;
-            gap: .8rem;
-            flex-wrap: wrap;
-            margin-top: 1.4rem;
-        }
-        .action-group {
-            display: flex;
-            gap: .6rem;
-            align-items: center;
-        }
-
-        /* ── Mode toggle ── */
-        .mode-toggle {
-            display: flex;
-            gap: .5rem;
-            margin-bottom: 1.6rem;
-        }
-        .mode-btn {
-            padding: .55rem 1.3rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: transparent;
-            color: rgba(255,255,255,.55);
-            font-family: 'Inter', sans-serif;
-            font-size: .88rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all .2s;
-        }
-        .mode-btn:hover { background: rgba(255,255,255,.06); color: #fff; }
-        .mode-btn.active {
-            background: #7c3aed;
-            color: #fff;
-            border-color: #7c3aed;
-            box-shadow: 0 2px 10px rgba(124,58,237,.35);
-        }
-
-        /* ── Language badge ── */
         .lang-badge {
             display: inline-flex;
             align-items: center;
             gap: .3rem;
-            font-size: .78rem;
+            font-size: .76rem;
             font-weight: 600;
-            padding: .15rem .6rem;
+            padding: .18rem .65rem;
             border-radius: 99px;
             background: rgba(255,255,255,.07);
             border: 1px solid rgba(255,255,255,.12);
-            color: rgba(255,255,255,.5);
+            color: rgba(255,255,255,.55);
+        }
+
+        /* ── Stats bar (chars + words only, no slider) ── */
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 12px;
+            padding: .75rem 1.2rem;
+            margin-bottom: 1.3rem;
+            font-size: .88rem;
+            color: rgba(255,255,255,.55);
+        }
+        .stat-chip { display: flex; align-items: center; gap: .45rem; }
+        .stat-chip span { font-weight: 800; color: #fff; font-size: 1rem; min-width: 28px; }
+
+        /* ── Two column grid ── */
+        .var-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+        @media(max-width:780px) { .var-grid { grid-template-columns: 1fr; } }
+
+        .section-label {
+            display: block;
+            font-size: .74rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.38);
+            margin-bottom: .45rem;
+        }
+
+        .var-textarea {
+            width: 100%;
+            padding: .9rem 1rem;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 11px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: .91rem;
+            line-height: 1.65;
+            resize: vertical;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+        }
+        .var-textarea:focus { border-color: #a78bfa; }
+
+        /* Output box — clickable to copy */
+        .output-wrap { position: relative; cursor: pointer; }
+        .output-wrap .var-textarea {
+            background: rgba(255,255,255,.03);
+            border-color: rgba(255,255,255,.08);
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+        }
+        .output-wrap:hover .var-textarea {
+            border-color: rgba(167,139,250,.4);
+            background: rgba(124,58,237,.06);
+        }
+        .output-wrap .click-hint {
+            position: absolute;
+            top: .6rem;
+            right: .7rem;
+            font-size: .7rem;
+            color: rgba(255,255,255,.25);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: .25rem;
+        }
+        .output-wrap.copied .var-textarea {
+            border-color: #34d399;
+            background: rgba(52,211,153,.06);
+        }
+
+        .char-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: .3rem;
+            font-size: .77rem;
+            color: rgba(255,255,255,.32);
+        }
+        .char-row.over { color: #f87171 !important; font-weight: 700; }
+
+        /* ── Analysis box ── */
+        .dup-box {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 11px;
+            padding: .9rem 1rem;
+            min-height: 100%;
+            font-size: .86rem;
+            box-sizing: border-box;
+        }
+        .dup-empty { color: rgba(255,255,255,.25); margin: 0; font-style: italic; }
+        .no-dup { color: #34d399; font-weight: 600; margin: 0; }
+        .dup-box ul {
+            list-style: none; margin: 0; padding: 0;
+            display: flex; flex-direction: column; gap: .45rem;
+        }
+        .dup-box li {
+            display: flex; align-items: center; gap: .5rem;
+            color: rgba(255,255,255,.7); font-size: .84rem;
+        }
+        .dup-tag {
+            display: inline-block;
+            padding: .18rem .65rem;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: .8rem;
+        }
+        .dup-action {
+            margin-left: auto;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: .1rem .45rem;
+            border-radius: 4px;
+        }
+        .dup-action.varied { color: #a78bfa; background: rgba(167,139,250,.12); }
+        .dup-action.deleted { color: #fb923c; background: rgba(251,146,60,.12); }
+
+        /* ── Output label row ── */
+        .out-label-row {
+            display: flex; align-items: center; gap: .6rem; margin-bottom: .45rem;
+        }
+        .out-badge {
+            font-size: .7rem; font-weight: 700; padding: .18rem .6rem;
+            border-radius: 4px; letter-spacing: .04em;
+            background: rgba(124,58,237,.22); color: #c4b5fd;
+            border: 1px solid rgba(124,58,237,.35);
+        }
+
+        /* ── Actions ── */
+        .var-actions {
+            display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 1.3rem;
+        }
+
+        /* ── Paste hint ── */
+        .paste-hint {
+            display: inline-flex; align-items: center; gap: .4rem;
+            font-size: .78rem; color: rgba(255,255,255,.3);
+            margin-bottom: 1rem;
+        }
+        .paste-hint kbd {
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 4px;
+            padding: .1rem .4rem;
+            font-family: 'Inter', sans-serif;
+            font-size: .72rem;
+            color: rgba(255,255,255,.55);
         }
     </style>
 </head>
@@ -274,13 +246,14 @@
         Auto Duplicate Word Variator
     </h2>
     <p class="variator-sub">
-        Paste a full Amazon product title. Words repeated at or above the threshold are replaced
-        with safe Unicode variants. Stop-words (de, für, les, van…) are never touched.
-        Output is always delivered in proper Title&nbsp;Case.
+        Paste your Amazon product title. Words repeated 3+ times are replaced with safe Unicode variants.
+        Connector words (and, für, och, del, voor…) that cannot be converted are
+        <strong style="color:#fb923c;">automatically removed</strong> if they repeat more than twice.
+        Output is always in proper Title&nbsp;Case.
     </p>
 
-    <!-- Supported languages note -->
-    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.6rem;">
+    <!-- Language badges -->
+    <div class="lang-badges">
         <span class="lang-badge">🇬🇧 EN</span>
         <span class="lang-badge">🇩🇪 DE</span>
         <span class="lang-badge">🇫🇷 FR</span>
@@ -290,55 +263,70 @@
         <span class="lang-badge">🇸🇪 SE</span>
     </div>
 
-    <!-- Settings bar -->
-    <div class="settings-bar">
-        <div class="setting-group">
-            <label for="dupThreshold">Replace from</label>
-            <span id="thresholdValue" class="slider-value">3</span>
-            <span id="occLabel">rd occurrence onwards</span>
-            <input type="range" id="dupThreshold" min="2" max="4" value="3">
+    <!-- Paste hint -->
+    <div class="paste-hint">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/>
+        </svg>
+        Press <kbd>Ctrl+V</kbd> anywhere on this page to instantly paste your title
+    </div>
+
+    <!-- Stats bar (no slider) -->
+    <div class="stats-bar">
+        <div class="stat-chip">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h10M4 18h14"/>
+            </svg>
+            Input chars: <span id="inputCharCount">0</span>
         </div>
-        <div class="setting-group" style="margin-left:auto;">
-            <span>Chars:</span>
-            <span id="inputCharCount" class="char-count-value">0</span>
+        <div class="stat-chip">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+            </svg>
+            Words: <span id="inputWordCount">0</span>
         </div>
-        <div class="setting-group">
-            <span>Words:</span>
-            <span id="inputWordCount" class="char-count-value">0</span>
+        <div class="stat-chip" style="margin-left:auto;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Output chars: <span id="outputCharCount">0</span>
         </div>
     </div>
 
     <!-- Input + Analysis grid -->
-    <div class="variator-grid">
+    <div class="var-grid">
         <div>
             <label class="section-label">Input Title</label>
-            <textarea id="varInput" class="variator-textarea"
+            <textarea id="varInput" class="var-textarea"
                 placeholder="Paste your Amazon product title here (any language)..."
-                style="min-height:180px;"></textarea>
-            <div class="char-row">
+                style="min-height:170px;"></textarea>
+            <div class="char-row" id="inputCharRow">
                 <span id="inputCharLabel">0 / 200 characters</span>
-                <span id="inputOverWarn" style="display:none;color:#f87171;font-weight:700;">
-                    ⚠ Over 200 chars
-                </span>
+                <span id="inputOverWarn" style="display:none;color:#f87171;font-weight:700;">⚠ Over 200</span>
             </div>
         </div>
-        <div>
+        <div style="display:flex;flex-direction:column;">
             <label class="section-label">Duplicate Analysis</label>
-            <div id="dupInfo" class="dup-box">
-                <p class="no-dup" style="color:rgba(255,255,255,.3);">
-                    Paste a title to see analysis.
-                </p>
+            <div id="dupInfo" class="dup-box" style="flex:1;">
+                <p class="dup-empty">Paste a title to see analysis.</p>
             </div>
         </div>
     </div>
 
-    <!-- OUTPUT 1: Full variation -->
-    <div class="output-section">
-        <div class="output-label-row">
+    <!-- Output -->
+    <div class="output-wrap" id="outputWrap">
+        <div class="out-label-row">
             <label class="section-label" style="margin:0;">Output Title</label>
-            <span class="output-badge badge-full">FULL VARIATION</span>
+            <span class="out-badge">PROCESSED</span>
         </div>
-        <textarea id="varOutput" class="variator-textarea"
+        <div class="click-hint">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Click to copy
+        </div>
+        <textarea id="varOutput" class="var-textarea"
             style="min-height:110px;" readonly
             placeholder="Output appears here automatically..."></textarea>
         <div class="char-row">
@@ -346,16 +334,14 @@
         </div>
     </div>
 
-    <!-- Action buttons -->
-    <div class="variator-actions">
-        <div class="action-group">
-            <button class="btn-primary" id="varCopyBtn">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                </svg>
-                Copy Output
-            </button>
-        </div>
+    <!-- Actions -->
+    <div class="var-actions">
+        <button class="btn-primary" id="varCopyBtn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Copy Output
+        </button>
         <button class="btn-secondary" id="varClearBtn">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -364,19 +350,25 @@
         </button>
     </div>
 
-</div><!-- /variator-wrap -->
-</div><!-- /variator-page -->
+</div>
+</div>
 
 <script src="../js/main.js"></script>
 <script>
 /* ================================================================
-   AUTO DUPLICATE WORD VARIATOR — v2
-   Fixes: Stop-words | Title Case | Smart Truncation | Dual Output
+   AUTO DUPLICATE WORD VARIATOR — v3
+   Changes:
+   - Slider removed (always 3rd occurrence threshold)
+   - Layout: right-side extra panel removed
+   - DELETE logic for unconvertible stop-words (3rd+ occurrence removed)
+   - Ctrl+V anywhere = auto paste into input
+   - Click output box = copy
    ================================================================ */
 
-// ── SAFE UNICODE MAP ─────────────────────────────────────────────
-// Only characters confirmed to render correctly on Amazon EU
-// (UK, DE, NL, IT, ES, SE) without becoming "?" marks.
+// ─────────────────────────────────────────────────────────────────
+// SAFE UNICODE MAP
+// Only confirmed safe on Amazon EU (UK/DE/NL/IT/ES/SE) — no "?" risk
+// ─────────────────────────────────────────────────────────────────
 const SAFE_MAP = {
     'a': ['à','â','ā'],
     'c': ['ç','ć'],
@@ -393,71 +385,110 @@ const SAFE_MAP = {
     'z': ['ź','ž','ż'],
 };
 
-// ── STOP-WORDS ────────────────────────────────────────────────────
-// These words are NEVER varied, no matter how often they repeat.
-// Keys are plain ASCII lowercase (after stripping accents).
-const STOP_WORDS = new Set([
+// ─────────────────────────────────────────────────────────────────
+// DELETE-WORDS (words that CANNOT be Unicode-varied)
+// These are common connectors/articles in each language.
+// Rule: first 2 occurrences kept as-is, 3rd+ occurrence DELETED
+// (along with the surrounding whitespace to keep spacing clean).
+// ─────────────────────────────────────────────────────────────────
+const DELETE_WORDS = new Set([
     // English
-    'a','an','the','and','or','but','for','nor','so','yet',
-    'in','on','at','to','of','by','up','as','is','it',
-    'be','do','go','if','my','no','us','we','its',
-    // French
-    'de','du','des','le','la','les','un','une','au','aux',
-    'et','ou','en','par','sur','sous','avec','pour','dans',
-    'que','qui','ne','ce','se','sa','son','ses',
+    'and','for','the','or','a','an','of','in','on','at','to','by',
+    'with','from','as','is','it','be','its','nor','so','yet','up',
     // German
-    'der','die','das','dem','den','ein','eine','und','oder',
-    'fur','von','mit','auf','bei','nach','aus','zu','im','am',
-    'ist','als','an','es','er','sie','wir','ich','wie','zum',
-    'zur','des','vom','ins','ans','ums',
+    'und','der','die','das','dem','den','des','ein','eine','oder',
+    'mit','von','fur','zu','im','am','aus','auf','bei','nach',
+    'zum','zur','vom','ins','ans','als','wie','aber',
+    // French
+    'les','pour','des','une','avec','dans','sur','par','que',
+    'qui','est','son','ses','aux','au','du','ou','ne','ce',
     // Spanish
-    'el','los','las','una','unos','unas','del','al',
-    'y','o','en','con','por','para','que','se','su','lo',
-    'sus','nos','les','si','ya','ni','mas',
+    'del','los','las','una','per','con','por','para','que',
+    'una','unos','sus','sin','mas','ya','ni','al','se','su',
     // Italian
-    'il','lo','gli','un','del','della','dei','degli','delle',
-    'di','da','con','tra','fra','e','ed','ma','che','si',
-    'ci','ne','non','col','al','ai','agli','alle','alle',
+    'di','del','dei','degli','delle','della','con','tra','fra',
+    'una','per','che','gli','non','col','ai','agli','alle',
     // Dutch
-    'het','een','van','voor','met','op','te','of',
-    'aan','bij','tot','uit','over','door','als','om','ze',
-    'zij','hij','wij','hun','hen','via',
+    'voor','van','het','een','met','van','aan','bij','tot',
+    'uit','door','als','om','ze','via','over',
     // Swedish
-    'den','det','ett','av','med','pa','till','och',
-    'eller','att','ar','som','har','om','vi','ni',
-    'han','hon','dem','nar','men','sin','sig',
+    'for','och','att','som','men','det','den','ett','har',
+    'till','eller','om','av','vid','sin','sig','pa','med',
 ]);
 
-// ── HELPERS ───────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
+// VARY-STOP WORDS (words that CAN potentially be varied but are
+// too common/grammatical to look right varied — kept as-is always)
+// ─────────────────────────────────────────────────────────────────
+const VARY_STOP = new Set([
+    // These stay unchanged no matter how many times they appear
+    // (they are NOT deleted either — only DELETE_WORDS get deleted)
+    // Placeholder for future expansion if needed
+]);
 
-/** Strip all diacritics → plain lowercase ASCII */
+// ─────────────────────────────────────────────────────────────────
+// TITLE CASE — minor words stay lowercase
+// ─────────────────────────────────────────────────────────────────
+const TITLE_MINOR = new Set([
+    // English
+    'a','an','the','and','but','or','for','nor','so','yet',
+    'at','by','in','of','on','to','up','as','via',
+    // Spanish
+    'de','del','al','el','la','los','las','un','una','unos','unas',
+    'y','o','en','con','por','para','que','se','su','sus','lo',
+    'ni','sin','ante','bajo','tras','entre','hacia','desde','sobre',
+    // Italian
+    'di','da','il','lo','gli','le','un','una','del','della','dei',
+    'degli','delle','e','ed','o','ma','che','si','ci','col','al',
+    'ai','agli','alle','fra','tra','con','su','per',
+    // French
+    'du','des','au','aux','et','ou','ne','ni','car','par','sur',
+    'dans','avec','sous','vers','chez',
+    // German
+    'der','die','das','dem','den','ein','eine','eines','einer',
+    'und','oder','aber','doch','im','am','zum','zur','vom',
+    'beim','ins','ans','ums','wie','als',
+    'fur',  // für → toPlainASCII → fur
+    // Dutch
+    'het','een','van','voor','met','op','te','aan','bij','tot',
+    'uit','door','als','om','ze','via','per',
+    // Swedish
+    'den','det','ett','av','för','med','på','till','och','eller',
+    'att','är','om','hos','vid','kring',
+    'for','pa','ar', // ASCII versions of för, på, är after toPlainASCII
+]);
+
+const ALLCAPS_WORDS = new Set([
+    'abs','ean','usb','led','diy','uv','hd','4k','2k','xl','xxl',
+    'lp','cd','dvd','pc','dna','iq',
+]);
+
+// ─────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────
 function toPlainASCII(str) {
-    return str
-        .normalize('NFD')
+    return str.normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .toLowerCase()
         .replace(/[^a-z0-9]/g, '');
 }
 
-/** Normalize a token for frequency counting */
-function normalizeWord(w) {
-    return w.normalize('NFC')
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}]+/gu, '');
+function normalizeKey(w) {
+    return w.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
 }
 
-/** Split text into tokens preserving whitespace and punctuation */
+// Tokenize preserving whitespace as separate tokens
 function tokenize(text) {
     return text.match(/\S+|\s+/g) || [text];
 }
 
-/** Build frequency map over tokens */
+// Count word frequencies
 function countWords(tokens) {
     const counts = {};
     const originals = {};
     for (const tok of tokens) {
         if (!/\p{L}/u.test(tok)) continue;
-        const key = normalizeWord(tok);
+        const key = normalizeKey(tok);
         if (!key) continue;
         counts[key] = (counts[key] || 0) + 1;
         if (!originals[key]) originals[key] = tok;
@@ -465,27 +496,33 @@ function countWords(tokens) {
     return { counts, originals };
 }
 
-/** Apply a single Unicode replacement to a token */
+// Check if a word has any character that can be Unicode-varied
+function canBeVaried(word) {
+    const lower = word.toLowerCase();
+    for (const ch of lower) {
+        if (SAFE_MAP[ch]) return true;
+    }
+    return false;
+}
+
+// Apply one Unicode replacement to a token
 function applyVariation(token) {
     const lower = token.toLowerCase();
     const chars = [...lower];
     const candidates = [];
-
     for (let i = 0; i < chars.length; i++) {
         if (SAFE_MAP[chars[i]]) candidates.push(i);
     }
-    if (candidates.length === 0) return token; // no replaceable char → unchanged
+    if (candidates.length === 0) return token;
 
     const idx = candidates[Math.floor(Math.random() * candidates.length)];
     const opts = SAFE_MAP[chars[idx]];
     const repl = opts[Math.floor(Math.random() * opts.length)];
 
-    // Preserve case of replaced character
     const origChar = token[idx];
     const isUpper = origChar === origChar.toUpperCase() && origChar !== origChar.toLowerCase();
     chars[idx] = isUpper ? repl.toUpperCase() : repl;
 
-    // Rebuild — keep original characters at non-replaced positions
     let result = '';
     for (let i = 0; i < chars.length; i++) {
         result += (i === idx) ? chars[i] : (token[i] ?? chars[i]);
@@ -493,255 +530,270 @@ function applyVariation(token) {
     return result;
 }
 
-/** Walk tokens, replace Nth+ occurrences (skipping stop-words) */
-function transformTokens(tokens, counts, threshold) {
-    const seen = {};
-    const out = [];
-    for (const raw of tokens) {
-        if (!/\p{L}/u.test(raw)) { out.push(raw); continue; }
-
-        const key  = normalizeWord(raw);
-        if (!key) { out.push(raw); continue; }
-
-        const plain = toPlainASCII(key);
-
-        // Never touch stop-words
-        if (STOP_WORDS.has(plain)) { out.push(raw); continue; }
-
-        seen[key] = (seen[key] || 0) + 1;
-
-        // Only vary if this word repeats enough AND we've now hit the threshold
-        if (counts[key] >= threshold && seen[key] >= threshold) {
-            out.push(applyVariation(raw));
-        } else {
-            out.push(raw);
-        }
-    }
-    return out;
-}
-
-// ── TITLE CASE ────────────────────────────────────────────────────
-/**
- * Proper Title Case for Amazon titles in 7 languages.
- *
- * What stays LOWERCASE (minor words — articles, prepositions, conjunctions):
- *   English:  a, an, the, and, but, or, for, nor, so, yet, at, by, in, of, on, to, up, as
- *   Spanish:  de, del, al, el, la, los, las, un, una, y, o, en, con, por, para, que, se, su
- *   Italian:  di, da, in, il, lo, la, i, gli, le, un, una, del, della, dei, e, o, ma, che, si
- *   French:   de, du, des, le, la, les, un, une, au, aux, et, ou, en, par, sur, pour, dans, que
- *   German:   der, die, das, dem, den, ein, eine, und, oder, in, an, am, im, zu, zur, zum, von, mit
- *   Dutch:    de, het, een, van, voor, met, op, te, en, of, aan, bij, tot, uit, door, als, om
- *   Swedish:  den, det, en, ett, av, för, med, på, till, och, eller, att, är, om, i
- *
- * What gets CAPITALIZED: ALL other words (product keywords, nouns, adjectives, etc.)
- *
- * Exceptions:
- *   - First word of entire title → ALWAYS capitalize
- *   - First word after | - – : , → ALWAYS capitalize
- *   - Hyphenated words → each part capitalized: Clip-On, Heat-Resistant
- *   - Known acronyms (ABS, USB, LED…) → stay ALL CAPS
- */
-const TITLE_MINOR = new Set([
-    // ── English ──
-    'a','an','the',
-    'and','but','or','for','nor','so','yet',
-    'at','by','in','of','on','to','up','as','via',
-    // ── Spanish ──
-    'de','del','al','el','la','los','las','un','una','unos','unas',
-    'y','o','en','con','por','para','que','se','su','sus','lo',
-    'ni','sin','ante','bajo','tras','entre','hacia','desde','sobre',
-    // ── Italian ──
-    'di','da','il','lo','gli','le','un','una','del','della','dei',
-    'degli','delle','e','ed','o','ma','che','si','ci','col','al',
-    'ai','agli','alle','fra','tra','con','su','per',
-    // ── French ──
-    'du','des','au','aux','et','ou','ne','ni','car','par','sur',
-    'dans','avec','sous','vers','chez','dès','dès',
-    // ── German ──
-    'der','die','das','dem','den','ein','eine','eines','einer',
-    'und','oder','aber','doch','im','am','zum','zur','vom',
-    'beim','ins','ans','ums','ans','wie','als',
-    // ── Dutch ──
-    'het','een','van','voor','met','op','te','aan','bij','tot',
-    'uit','door','als','om','ze','bij','via','per',
-    // ── Swedish ──
-    'den','det','ett','av','för','med','på','till','och','eller',
-    'att','är','om','hos','vid','hos','kring',
-]);
-
-const ALLCAPS_WORDS = new Set([
-    'abs','ean','usb','led','diy','uv','hd','4k','2k','xl','xxl',
-    'lp','cd','dvd','pc','dna','iq','uk','eu','us',
-]);
-
+// Title case conversion
+// Rules:
+//  - If original token was ALL CAPS (e.g. WATERPROOF) → keep ALL CAPS
+//  - Minor words in middle of title → lowercase
+//  - First word or word after separator → capitalize first letter
+//  - Hyphenated → each part capitalize
 function toTitleCase(str) {
-    // Tokenize: separators | whitespace | words
     const tokens = str.match(/[|\-–—:,]|[\s]+|[^\s|\-–—:,]+/g) || [];
-    let capNext = true; // first token always capitalized
-
+    let capNext = true;
     return tokens.map(tok => {
-        // Whitespace → unchanged
         if (/^\s+$/.test(tok)) return tok;
-
-        // Separator → pass through, flag next word to capitalize
-        if (/^[|\-–—:,]$/.test(tok)) {
-            capNext = true;
-            return tok;
-        }
+        if (/^[|\-–—:,]$/.test(tok)) { capNext = true; return tok; }
 
         const lower = tok.toLowerCase();
         const plain = toPlainASCII(lower);
 
-        // Known acronyms → ALL CAPS
-        if (ALLCAPS_WORDS.has(plain)) {
+        // Hardcoded ALL-CAPS acronyms always uppercase
+        if (ALLCAPS_WORDS.has(plain)) { capNext = false; return tok.toUpperCase(); }
+
+        // If the ORIGINAL token was written in ALL CAPS by the user → preserve it
+        // (check: every letter in token is uppercase and token has at least 2 letters)
+        const letters = tok.replace(/[^a-zA-ZÀ-žÀ-ÿ]/g, '');
+        if (letters.length >= 2 && letters === letters.toUpperCase()) {
             capNext = false;
-            return tok.toUpperCase();
+            return tok; // e.g. WATERPROOF, LIQUID, FAUX → stays as-is
         }
 
-        // Minor word in the MIDDLE of title → lowercase
-        if (!capNext && TITLE_MINOR.has(plain)) {
-            capNext = false;
-            return lower;
-        }
+        // Minor word in MIDDLE of title → always lowercase (für stays für, not Für)
+        if (!capNext && TITLE_MINOR.has(plain)) { capNext = false; return lower; }
 
-        // Hyphenated: each part capitalized → Clip-On, Heat-Resistant
+        // Hyphenated word → capitalize each part
         if (tok.includes('-')) {
-            const result = tok.split('-').map(part => {
-                if (!part) return part;
-                const p = part.toLowerCase();
-                return p.charAt(0).toUpperCase() + p.slice(1);
+            const r = tok.split('-').map(p => {
+                if (!p) return p;
+                const pl = p.toLowerCase();
+                return pl.charAt(0).toUpperCase() + pl.slice(1);
             }).join('-');
-            capNext = false;
-            return result;
+            capNext = false; return r;
         }
 
-        // Normal word → capitalize first letter
+        // Normal word → capitalize first letter only
         capNext = false;
         return lower.charAt(0).toUpperCase() + lower.slice(1);
-
     }).join('');
 }
 
-// ── DOM REFS ─────────────────────────────────────────────────────
-const varInput     = document.getElementById('varInput');
-const varOutput    = document.getElementById('varOutput');
-const dupInfo      = document.getElementById('dupInfo');
-const thresholdEl  = document.getElementById('dupThreshold');
-const thresholdVal = document.getElementById('thresholdValue');
-const occLabel     = document.getElementById('occLabel');
+// ─────────────────────────────────────────────────────────────────
+// MAIN TRANSFORM
+// Threshold is fixed at 3 (3rd+ occurrence gets treated)
+// DELETE_WORDS: 3rd+ occurrence → token + its preceding space deleted
+// Other words: 3rd+ occurrence → Unicode varied
+// ─────────────────────────────────────────────────────────────────
+const THRESHOLD = 3;
 
-const SUFFIX = { '2': 'nd', '3': 'rd', '4': 'th' };
+function transformTokens(tokens, counts) {
+    const seen = {};
+    // We'll build output as array of {value, delete} objects first
+    // then clean up spaces around deleted tokens
+    const out = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+        const raw = tokens[i];
+
+        // Whitespace token — add as-is for now, may be removed later
+        if (!/\p{L}/u.test(raw)) {
+            out.push({ value: raw, isSpace: true, deleted: false });
+            continue;
+        }
+
+        const key   = normalizeKey(raw);
+        if (!key) { out.push({ value: raw, isSpace: false, deleted: false }); continue; }
+
+        const plain = toPlainASCII(key);
+        seen[key] = (seen[key] || 0) + 1;
+        const nth = seen[key];
+
+        // First two occurrences of any word → always keep unchanged
+        if (nth < THRESHOLD) {
+            out.push({ value: raw, isSpace: false, deleted: false });
+            continue;
+        }
+
+        // 3rd+ occurrence:
+        if (DELETE_WORDS.has(plain)) {
+            // DELETE this word (mark it, we'll also remove the adjacent space)
+            out.push({ value: raw, isSpace: false, deleted: true });
+        } else {
+            // Try to Unicode-vary it
+            const varied = applyVariation(raw);
+            out.push({ value: varied, isSpace: false, deleted: false });
+        }
+    }
+
+    // Clean up: for each deleted word token, also remove the space immediately before it
+    // (to prevent double spaces in output)
+    const cleaned = [];
+    for (let i = 0; i < out.length; i++) {
+        if (out[i].deleted) {
+            // Remove preceding whitespace token if present
+            if (cleaned.length > 0 && cleaned[cleaned.length - 1].isSpace) {
+                cleaned.pop();
+            }
+            // Skip this deleted word
+            continue;
+        }
+        cleaned.push(out[i]);
+    }
+
+    return cleaned.map(t => t.value);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ANALYSIS PANEL
+// Shows words that appear 3+ times, with their action label
+// ─────────────────────────────────────────────────────────────────
 const TAG_COLORS = [
     '#7c3aed','#2563eb','#059669','#dc2626','#d97706',
     '#0891b2','#db2777','#4f46e5','#16a34a','#b45309'
 ];
 
-// ── THRESHOLD SLIDER ─────────────────────────────────────────────
-function updateThresholdLabel() {
-    const v = thresholdEl.value;
-    thresholdVal.textContent = v;
-    occLabel.textContent = (SUFFIX[v] || 'th') + ' occurrence onwards';
-}
-updateThresholdLabel();
-thresholdEl.addEventListener('input', () => { updateThresholdLabel(); processVariator(); });
-
-// ── CHAR / WORD COUNTS ────────────────────────────────────────────
-function updateCounts() {
-    const inp = varInput.value;
-    const out = varOutput.value;
-    const inLen = inp.length;
-    const outLen = out.length;
-    const words = inp.trim() ? inp.trim().split(/\s+/).length : 0;
-
-    document.getElementById('inputCharCount').textContent = inLen;
-    document.getElementById('inputWordCount').textContent = words;
-
-    const inLabel = document.getElementById('inputCharLabel');
-    inLabel.textContent = `${inLen} / 200 characters`;
-    inLabel.className = 'char-row' + (inLen > 200 ? ' over' : '');
-    document.getElementById('inputOverWarn').style.display = inLen > 200 ? 'inline' : 'none';
-
-    const outLabel = document.getElementById('outputCharLabel');
-    outLabel.textContent = `${outLen} / 200 characters`;
-    outLabel.className = 'char-row' + (outLen > 200 ? ' over' : '');
-}
-
-// ── DUPLICATE ANALYSIS PANEL ──────────────────────────────────────
-function renderDupInfo(counts, originals, threshold) {
+function renderDupInfo(counts) {
     const dups = Object.entries(counts)
-        .filter(([k, c]) => c >= threshold && !STOP_WORDS.has(toPlainASCII(k)))
+        .filter(([, c]) => c >= THRESHOLD)
         .sort((a, b) => b[1] - a[1]);
 
     if (dups.length === 0) {
-        dupInfo.innerHTML = '<p class="no-dup">✓ No duplicates above threshold found.</p>';
+        dupInfo.innerHTML = '<p class="no-dup">✓ No duplicates found at 3+ threshold.</p>';
         return;
     }
 
     let html = '<ul>';
     dups.forEach(([key, count], i) => {
         const color = TAG_COLORS[i % TAG_COLORS.length];
+        const plain = toPlainASCII(key);
+        const isDelete = DELETE_WORDS.has(plain);
+        const actionLabel = isDelete ? 'delete 3rd+' : 'vary 3rd+';
+        const actionClass = isDelete ? 'deleted' : 'varied';
         html += `<li>
-            <span class="dup-tag" style="background:${color}22;color:${color};border:1px solid ${color}44;">
-                ${originals[key]}
+            <span class="dup-tag" style="background:${color}20;color:${color};border:1px solid ${color}35;">
+                ${key}
             </span>
-            <span class="dup-count">× ${count}</span>
+            <span style="color:rgba(255,255,255,.4);font-size:.8rem;">×${count}</span>
+            <span class="dup-action ${actionClass}">${actionLabel}</span>
         </li>`;
     });
     html += '</ul>';
     dupInfo.innerHTML = html;
 }
 
-// ── MAIN PROCESS ─────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
+// DOM REFS & COUNTS
+// ─────────────────────────────────────────────────────────────────
+const varInput  = document.getElementById('varInput');
+const varOutput = document.getElementById('varOutput');
+const dupInfo   = document.getElementById('dupInfo');
+
+function updateCounts() {
+    const inp    = varInput.value;
+    const out    = varOutput.value;
+    const inLen  = inp.length;
+    const outLen = out.length;
+    const words  = inp.trim() ? inp.trim().split(/\s+/).length : 0;
+
+    document.getElementById('inputCharCount').textContent  = inLen;
+    document.getElementById('inputWordCount').textContent  = words;
+    document.getElementById('outputCharCount').textContent = outLen;
+
+    const inLabel = document.getElementById('inputCharLabel');
+    inLabel.textContent = `${inLen} / 200 characters`;
+    inLabel.parentElement.className = 'char-row' + (inLen > 200 ? ' over' : '');
+    document.getElementById('inputOverWarn').style.display = inLen > 200 ? 'inline' : 'none';
+
+    const outLabel = document.getElementById('outputCharLabel');
+    outLabel.textContent = `${outLen} / 200 characters`;
+    outLabel.parentElement.className = 'char-row' + (outLen > 200 ? ' over' : '');
+}
+
+// ─────────────────────────────────────────────────────────────────
+// MAIN PROCESS
+// ─────────────────────────────────────────────────────────────────
 function processVariator() {
     const text = varInput.value;
 
     if (!text.trim()) {
         varOutput.value = '';
-        dupInfo.innerHTML = '<p style="color:rgba(255,255,255,.3);margin:0;">Paste a title to see analysis.</p>';
+        dupInfo.innerHTML = '<p class="dup-empty">Paste a title to see analysis.</p>';
         updateCounts();
         return;
     }
 
-    const threshold = Number(thresholdEl.value);
     const tokens = tokenize(text);
-    const { counts, originals } = countWords(tokens);
+    const { counts } = countWords(tokens);
 
-    renderDupInfo(counts, originals, threshold);
+    renderDupInfo(counts);
 
-    // Apply Unicode variation then Title Case
-    const transformed = transformTokens(tokens, counts, threshold);
+    const transformed = transformTokens(tokens, counts);
     varOutput.value = toTitleCase(transformed.join(''));
 
     updateCounts();
 }
 
-// ── EVENTS ───────────────────────────────────────────────────────
-let typingDelay;
-varInput.addEventListener('input', () => {
-    clearTimeout(typingDelay);
-    typingDelay = setTimeout(processVariator, 80);
-});
-
-// Copy Output
-document.getElementById('varCopyBtn').addEventListener('click', () => {
+// ─────────────────────────────────────────────────────────────────
+// COPY HELPER
+// ─────────────────────────────────────────────────────────────────
+function copyOutput() {
     const out = varOutput.value;
     if (!out.trim()) { showToast('Nothing to copy', true); return; }
+    const wrap = document.getElementById('outputWrap');
     navigator.clipboard.writeText(out)
-        .then(() => showToast('✓ Output copied!'))
+        .then(() => {
+            showToast('✓ Output copied!');
+            wrap.classList.add('copied');
+            setTimeout(() => wrap.classList.remove('copied'), 1200);
+        })
         .catch(() => {
             const t = document.createElement('textarea');
             t.value = out; document.body.appendChild(t);
             t.select(); document.execCommand('copy');
             document.body.removeChild(t);
             showToast('✓ Output copied!');
+            wrap.classList.add('copied');
+            setTimeout(() => wrap.classList.remove('copied'), 1200);
         });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// EVENTS
+// ─────────────────────────────────────────────────────────────────
+
+// Live typing — debounced
+let typingDelay;
+varInput.addEventListener('input', () => {
+    clearTimeout(typingDelay);
+    typingDelay = setTimeout(processVariator, 80);
 });
 
-// Clear
+// Ctrl+V ANYWHERE on page → REPLACE input content (never append)
+document.addEventListener('paste', (e) => {
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    if (!text || !text.trim()) return;
+    // Always intercept paste — whether focused on input or anywhere else
+    // This ensures re-paste always replaces, not appends
+    e.preventDefault();
+    varInput.value = text.trim();
+    varInput.focus();
+    processVariator();
+    showToast('✓ Title pasted!');
+});
+
+// Click on output box → copy
+document.getElementById('outputWrap').addEventListener('click', copyOutput);
+
+// Copy button
+document.getElementById('varCopyBtn').addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent double-fire if button is inside outputWrap
+    copyOutput();
+});
+
+// Clear button
 document.getElementById('varClearBtn').addEventListener('click', () => {
     varInput.value = '';
     varOutput.value = '';
-    dupInfo.innerHTML = '<p style="color:rgba(255,255,255,.3);margin:0;">Paste a title to see analysis.</p>';
+    dupInfo.innerHTML = '<p class="dup-empty">Paste a title to see analysis.</p>';
+    document.getElementById('outputWrap').classList.remove('copied');
     updateCounts();
     showToast('Cleared!');
 });
