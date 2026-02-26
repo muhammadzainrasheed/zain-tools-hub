@@ -174,6 +174,7 @@
         }
         .dup-action.varied { color: #a78bfa; background: rgba(167,139,250,.12); }
         .dup-action.deleted { color: #fb923c; background: rgba(251,146,60,.12); }
+        .dup-action.kept { color: #6b7280; background: rgba(107,114,128,.12); }
 
         /* ── Output label row ── */
         .out-label-row {
@@ -403,8 +404,8 @@ const DELETE_WORDS = new Set([
     'les','pour','des','une','avec','dans','sur','par','que',
     'qui','est','son','ses','aux','au','du','ou','ne','ce',
     // Spanish
-    'del','los','las','y','una','per','con','por','para','que',
-    'una','unos','sus','sin','mas','ya','ni','al','se','su',
+    'del','los','las','una','per','con','por','para','que',
+    'una','unos','sus','sin','mas','ya','ni','al','se','su','y',
     // Italian
     'di','del','dei','degli','delle','della','con','tra','fra',
     'una','per','che','gli','non','col','ai','agli','alle',
@@ -417,13 +418,30 @@ const DELETE_WORDS = new Set([
 ]);
 
 // ─────────────────────────────────────────────────────────────────
-// VARY-STOP WORDS (words that CAN potentially be varied but are
-// too common/grammatical to look right varied — kept as-is always)
+// NEVER-TOUCH WORDS
+// These words are ALWAYS kept exactly as typed — no variation,
+// no deletion — no matter how many times they repeat.
+// These are short grammatical connectors that:
+//   (a) cannot be safely Unicode-varied (Amazon would show "?")
+//   (b) are meaningful enough that deleting them breaks grammar
+// Plain ASCII keys (after toPlainASCII) — covers accented originals too.
 // ─────────────────────────────────────────────────────────────────
-const VARY_STOP = new Set([
-    // These stay unchanged no matter how many times they appear
-    // (they are NOT deleted either — only DELETE_WORDS get deleted)
-    // Placeholder for future expansion if needed
+const NEVER_TOUCH = new Set([
+    // Spanish / French / Italian / Portuguese
+    // Only words that should NEVER be varied AND never deleted
+    'de','la','le','el','en','y',
+    // Italian specifics
+    'di','da','il','lo','gli',
+    // French specifics
+    'du','au','aux','et','ou',
+    // Dutch
+    'of','op','te',
+    // German short ones (accented stripped)
+    'in','an','am','im','zu','von',
+    // Swedish / Norwegian
+    'i','og',
+    // Universal short ones that look wrong varied
+    'e','a','o',
 ]);
 
 // ─────────────────────────────────────────────────────────────────
@@ -606,6 +624,12 @@ function transformTokens(tokens, counts) {
         seen[key] = (seen[key] || 0) + 1;
         const nth = seen[key];
 
+        // NEVER-TOUCH words → always keep exactly as typed, forever
+        if (NEVER_TOUCH.has(plain)) {
+            out.push({ value: raw, isSpace: false, deleted: false });
+            continue;
+        }
+
         // First two occurrences of any word → always keep unchanged
         if (nth < THRESHOLD) {
             out.push({ value: raw, isSpace: false, deleted: false });
@@ -664,9 +688,10 @@ function renderDupInfo(counts) {
     dups.forEach(([key, count], i) => {
         const color = TAG_COLORS[i % TAG_COLORS.length];
         const plain = toPlainASCII(key);
-        const isDelete = DELETE_WORDS.has(plain);
-        const actionLabel = isDelete ? 'delete 3rd+' : 'vary 3rd+';
-        const actionClass = isDelete ? 'deleted' : 'varied';
+        const isNeverTouch = NEVER_TOUCH.has(plain);
+        const isDelete = !isNeverTouch && DELETE_WORDS.has(plain);
+        const actionLabel = isNeverTouch ? 'keep as-is' : isDelete ? 'delete 3rd+' : 'vary 3rd+';
+        const actionClass = isNeverTouch ? 'kept' : isDelete ? 'deleted' : 'varied';
         html += `<li>
             <span class="dup-tag" style="background:${color}20;color:${color};border:1px solid ${color}35;">
                 ${key}
