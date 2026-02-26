@@ -24,6 +24,7 @@ const ACCOUNTS_LIST = [
     'liuyuk','liuyde','liuyfr','liuyes','liuyit','liuynl','liuyse','liuybe',
     'neiabe','neiase','neianl','neiait','neiafr','neiaes','neiade','neiauk',
     'gkzxfus','gkzxfca','gkzxfmx',
+    'gojnjp',
     'yfeide','yfeise','yfeiuk','yfeinl','yfeiit','yfeifr','yfeies','yfeibe',
     'priobe','priose','prionl','prioit','priofr','prioes','priode','priouk',
     'cordbe','cordse','cordnl','cordit','cordfr','cordes','cordde','corduk',
